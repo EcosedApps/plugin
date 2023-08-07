@@ -4,10 +4,13 @@ Android插件化开发框架
 Jitpack源最新版本[![](https://jitpack.io/v/ecosed/EcosedPlugin.svg)](https://jitpack.io/#ecosed/EcosedPlugin)
 
 使用方法：
+
 1.在settings.gradle.kts中添加
+
 repositories { maven("https://jitpack.io") }
 
 2.在模块的build.gradle.kts中添加
+
 dependencies { implementation("com.github.ecosed:EcosedPlugin:1.0.0-beta01") }
 
 3.点击Sync Now同步即可完成工程设定。
