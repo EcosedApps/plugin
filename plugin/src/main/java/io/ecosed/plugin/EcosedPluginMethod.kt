@@ -13,7 +13,7 @@ class EcosedPluginMethod(binding: EcosedPluginBinding, channel: String) {
 
     private var mBinding: EcosedPluginBinding = binding
     private var mChannel: String = channel
-    private lateinit var mCallBack: EcosedMethodCallHandler
+    private var mCallBack: EcosedMethodCallHandler? = null
     private var mResult: Any? = null
 
     /**
@@ -21,9 +21,7 @@ class EcosedPluginMethod(binding: EcosedPluginBinding, channel: String) {
      * @param callBack 执行方法时调用EcosedMethodCallHandler
      */
     fun setMethodCallHandler(callBack: EcosedMethodCallHandler?) {
-        callBack?.let {
-            this.mCallBack = it
-        }
+        this.mCallBack = callBack
     }
 
     /**
@@ -51,7 +49,7 @@ class EcosedPluginMethod(binding: EcosedPluginBinding, channel: String) {
     fun execMethodCall(channel: String, call: String?): Any? {
         if (channel == mChannel){
             call?.let {
-                mCallBack.onEcosedMethodCall(call = call, result = object : EcosedResult {
+                mCallBack?.onEcosedMethodCall(call = call, result = object : EcosedResult {
                     override fun success(result: Any?) {
                         mResult = result
                     }

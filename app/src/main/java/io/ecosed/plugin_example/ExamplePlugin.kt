@@ -1,8 +1,6 @@
 package io.ecosed.plugin_example
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedPluginBinding
 import io.ecosed.plugin.EcosedPluginMethod

@@ -76,16 +76,22 @@ class EcosedPluginEngine(activity: Activity) {
      */
     fun execMethodCall(channel: String, call: String): Any? {
         var result: Any? = null
-        mPluginList.forEach { plugin ->
-            val method: EcosedPluginMethod = plugin.getEcosedPluginMethod()
-            when (method.getChannel()) {
-                channel -> result = method.execMethodCall(
-                    channel = channel, call = call
-                )
+        try {
+            mPluginList.forEach { plugin ->
+                val method: EcosedPluginMethod = plugin.getEcosedPluginMethod()
+                when (method.getChannel()) {
+                    channel -> result = method.execMethodCall(
+                        channel = channel, call = call
+                    )
 
-                else -> if (BuildConfig.DEBUG) {
-                    Log.e(tag, "请传入有效的通道名称")
+                    else -> if (BuildConfig.DEBUG) {
+                        Log.e(tag, "请传入有效的通道名称")
+                    }
                 }
+            }
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) {
+                Log.e(tag, "forEach error!")
             }
         }
         return result

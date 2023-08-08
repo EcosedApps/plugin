@@ -1,5 +1,5 @@
 # EcosedPlugin
-Android插件化开发框架
+Android插件化开发框架，像编写Flutter插件一样编写Android原生代码，将功能分插件实现，提高项目可维护性。
 
 使用方法：
 
