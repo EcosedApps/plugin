@@ -18,7 +18,7 @@ class PluginEngineBuilder {
      * @param activity 传入Activity
      */
     fun init(activity: Activity): PluginEngineBuilder {
-        this@PluginEngineBuilder.mActivity = activity
+        this.mActivity = activity
         return this@PluginEngineBuilder
     }
 
