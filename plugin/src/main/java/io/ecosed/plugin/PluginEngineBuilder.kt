@@ -17,8 +17,10 @@ class PluginEngineBuilder {
      * 初始化构建器
      * @param activity 传入Activity
      */
-    fun init(activity: Activity): PluginEngineBuilder {
-        this.mActivity = activity
+    fun init(activity: Activity?): PluginEngineBuilder {
+        activity?.let {
+            this.mActivity = it
+        }
         return this@PluginEngineBuilder
     }
 
