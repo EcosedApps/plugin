@@ -51,11 +51,11 @@ class EcosedPluginMethod(binding: EcosedPluginBinding, channel: String) {
             call?.let {
                 mCallBack?.onEcosedMethodCall(call = call, result = object : EcosedResult {
                     override fun success(result: Any?) {
-                        mResult = result
+                        this@EcosedPluginMethod.mResult = result
                     }
 
                     override fun notImplemented() {
-                        mResult = null
+                        this@EcosedPluginMethod.mResult = null
                     }
                 })
             }
