@@ -14,7 +14,7 @@ class EcosedPluginBinding(activity: Activity) {
     private val mActivity: Activity = activity
 
     /**
-     * 内部方法：获取Activity
+     * 内部方法: 获取Activity
      */
     internal fun getActivity(): Activity {
         return mActivity

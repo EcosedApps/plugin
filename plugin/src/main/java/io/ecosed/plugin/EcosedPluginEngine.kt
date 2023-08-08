@@ -72,7 +72,7 @@ class EcosedPluginEngine(activity: Activity) {
      * 调用插件代码的方法
      * @param channel 要调用的插件的通道
      * @param call 要调用的插件中的方法
-     * @return 返回方法执行后的返回值，类型为Any?。
+     * @return 返回方法执行后的返回值,类型为Any?。
      */
     fun execMethodCall(channel: String, call: String): Any? {
         var result: Any? = null
