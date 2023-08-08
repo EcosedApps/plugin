@@ -1,8 +1,7 @@
 package io.ecosed.plugin_example
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import io.ecosed.plugin.EcosedPluginEngine
 import io.ecosed.plugin.PluginEngineBuilder
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
@@ -24,12 +23,21 @@ class MainActivity : AppCompatActivity() {
         engine = PluginEngineBuilder().init(
             activity = this@MainActivity
         ).build()
+        engine.attach()
         // 添加插件
         engine.addPlugin(plugin = ExamplePlugin())
+        engine.addPlugin(plugin = ToastPlugin())
         // 执行代码
-        binding.textHello.text = engine.execMethodCall(call = "getText").toString()
-        engine.execMethodCall(call = "toast")
+        binding.textHello.text = engine.execMethodCall(
+            channel = "ExamplePlugin",
+            call = "getText"
+        ).toString()
+        engine.execMethodCall(
+            channel = "ToastPlugin",
+            call = "toast"
+        )
     }
+
 
     /**
      * Activity销毁时调用
@@ -38,5 +46,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         // 移除插件
         engine.removePlugin(plugin = ExamplePlugin())
+        engine.removePlugin(plugin = ToastPlugin())
+        engine.detach()
     }
 }

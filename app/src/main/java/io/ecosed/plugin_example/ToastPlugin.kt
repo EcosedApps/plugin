@@ -8,7 +8,7 @@ import io.ecosed.plugin.EcosedPluginBinding
 import io.ecosed.plugin.EcosedPluginMethod
 import io.ecosed.plugin.EcosedResult
 
-class ExamplePlugin : EcosedPlugin {
+class ToastPlugin : EcosedPlugin {
 
     private lateinit var pluginMethod: EcosedPluginMethod
     private lateinit var mContext: Context
@@ -19,7 +19,7 @@ class ExamplePlugin : EcosedPlugin {
     override fun onEcosedAttached(binding: EcosedPluginBinding) {
         pluginMethod = EcosedPluginMethod(binding = binding, channel = channel)
         mContext = pluginMethod.getActivity()
-        pluginMethod.setMethodCallHandler(callBack = this@ExamplePlugin)
+        pluginMethod.setMethodCallHandler(callBack = this@ToastPlugin)
     }
 
     /**
@@ -34,7 +34,7 @@ class ExamplePlugin : EcosedPlugin {
      */
     override fun onEcosedMethodCall(call: String, result: EcosedResult) {
         when (call) {
-            "getText" -> result.success("Hello World")
+            "toast" -> Toast.makeText(mContext, "Hello World", Toast.LENGTH_SHORT).show()
             else -> result.notImplemented()
         }
     }
@@ -47,6 +47,6 @@ class ExamplePlugin : EcosedPlugin {
     }
 
     companion object {
-        const val channel: String = "ExamplePlugin"
+        const val channel: String = "ToastPlugin"
     }
 }
