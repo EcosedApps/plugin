@@ -10,7 +10,7 @@ import android.util.Log
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/EcosedPlugin/blob/master/README.md
  */
-class EcosedPluginEngine(activity: Activity) {
+class EcosedPluginEngine constructor(activity: Activity) {
 
     private val mActivity: Activity = activity
     private var mBinding: EcosedPluginBinding? = null

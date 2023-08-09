@@ -9,7 +9,7 @@ import android.app.Activity
  * 描述: 插件方法
  * 文档: https://github.com/ecosed/EcosedPlugin/blob/master/README.md
  */
-class EcosedPluginMethod(binding: EcosedPluginBinding, channel: String) {
+class EcosedPluginMethod constructor(binding: EcosedPluginBinding, channel: String) {
 
     private var mBinding: EcosedPluginBinding = binding
     private var mChannel: String = channel

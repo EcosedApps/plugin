@@ -9,7 +9,7 @@ import android.app.Activity
  * 描述: 插件绑定器
  * 文档: https://github.com/ecosed/EcosedPlugin/blob/master/README.md
  */
-class EcosedPluginBinding(activity: Activity) {
+class EcosedPluginBinding constructor(activity: Activity) {
 
     private val mActivity: Activity = activity
 
