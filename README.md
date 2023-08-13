@@ -9,7 +9,7 @@ repositories { maven("https://jitpack.io") }
 
 2.在模块的build.gradle.kts中添加
 
-dependencies { implementation("com.github.ecosed:EcosedPlugin:[![](https://jitpack.io/v/ecosed/EcosedPlugin.svg)](https://jitpack.io/#ecosed/EcosedPlugin)") }
+dependencies { implementation("com.github.ecosed:EcosedPlugin:[![](https://jitpack.io/v/ecosed/plugin.svg)](https://jitpack.io/#ecosed/plugin)") }
 
 3.点击Sync Now同步即可完成工程设定。
 
