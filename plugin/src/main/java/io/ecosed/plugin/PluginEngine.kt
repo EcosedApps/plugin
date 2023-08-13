@@ -140,7 +140,7 @@ class PluginEngine {
         /**
          * 用于打印日志的标签.
          */
-        const val tag: String = "EcosedPluginEngine"
+        private const val tag: String = "EcosedPluginEngine"
 
         /**
          * 引擎构建函数.
