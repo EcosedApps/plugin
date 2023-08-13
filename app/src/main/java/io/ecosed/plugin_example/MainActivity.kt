@@ -2,14 +2,13 @@ package io.ecosed.plugin_example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.ecosed.plugin.EcosedPluginEngine
-import io.ecosed.plugin.PluginEngineBuilder
+import io.ecosed.plugin.PluginEngine
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var engine: EcosedPluginEngine
+    private lateinit var engine: PluginEngine
 
     /**
      * Activity创建时调用
@@ -19,25 +18,29 @@ class MainActivity : AppCompatActivity() {
         // 设置布局
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // 初始化框架引擎
-        engine = PluginEngineBuilder().init(
-            activity = this@MainActivity
-        ).build()
+        engine = PluginEngine.build(activity = this@MainActivity)
         engine.attach()
         // 添加插件
-        engine.addPlugin(plugin = ExamplePlugin())
-        engine.addPlugin(plugin = ToastPlugin())
+        engine.addPlugin(
+            elements = engine.pluginArrayOf(
+                ExamplePlugin(),
+                ToastPlugin()
+            )
+        )
+
         // 执行代码
         binding.textHello.text = engine.execMethodCall(
-            channel = "ExamplePlugin",
-            call = "getText"
+            name = ExamplePlugin.channel,
+            method = "getText"
         ).toString()
+
         engine.execMethodCall(
-            channel = "ToastPlugin",
-            call = "toast"
+            name = ToastPlugin.channel,
+            method = "toast"
         )
     }
-
 
     /**
      * Activity销毁时调用
@@ -45,8 +48,12 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // 移除插件
-        engine.removePlugin(plugin = ExamplePlugin())
-        engine.removePlugin(plugin = ToastPlugin())
+        engine.removePlugin(
+            elements = engine.pluginArrayOf(
+                ExamplePlugin(),
+                ToastPlugin()
+            )
+        )
         engine.detach()
     }
 }
