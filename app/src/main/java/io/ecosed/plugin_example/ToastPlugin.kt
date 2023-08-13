@@ -16,14 +16,14 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
         mContext = pluginChannel.getActivity()
-        pluginChannel.setMethodCallHandler(callBack = this@ToastPlugin)
+        pluginChannel.setMethodCallHandler(handler = this@ToastPlugin)
     }
 
     /**
      * 插件被移除时执行
      */
     override fun onEcosedRemoved(binding: EcosedPlugin.EcosedPluginBinding) {
-        pluginChannel.setMethodCallHandler(callBack = null)
+        pluginChannel.setMethodCallHandler(handler = null)
     }
 
     /**

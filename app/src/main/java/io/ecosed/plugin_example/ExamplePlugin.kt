@@ -12,14 +12,14 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
      */
     override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
-        pluginChannel.setMethodCallHandler(callBack = this@ExamplePlugin)
+        pluginChannel.setMethodCallHandler(handler = this@ExamplePlugin)
     }
 
     /**
      * 插件被移除时执行
      */
     override fun onEcosedRemoved(binding: EcosedPlugin.EcosedPluginBinding) {
-        pluginChannel.setMethodCallHandler(callBack = null)
+        pluginChannel.setMethodCallHandler(handler = null)
     }
 
     /**

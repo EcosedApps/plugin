@@ -127,9 +127,7 @@ class PluginEngine {
          */
         fun build(
             activity: Activity?,
-            content: (
-                engine: PluginEngine
-            ) -> PluginEngine = { engine ->
+            content: (PluginEngine) -> PluginEngine = { engine ->
                 engine
             }
         ): PluginEngine
@@ -150,16 +148,17 @@ class PluginEngine {
          */
         override fun build(
             activity: Activity?,
-            content: (plugin: PluginEngine) -> PluginEngine
+            content: (PluginEngine) -> PluginEngine
         ): PluginEngine {
             content(
-                PluginEngine().apply {
-                    activity?.let {
+                PluginEngine()
+            ).let { engine ->
+                activity?.let {
+                    engine.apply {
                         mActivity = it
                     }
                 }
-            ).let { client ->
-                return@build client
+                return@build engine
             }
         }
     }
