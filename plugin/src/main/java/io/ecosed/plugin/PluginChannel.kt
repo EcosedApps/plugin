@@ -13,16 +13,16 @@ class PluginChannel constructor(binding: EcosedPlugin.EcosedPluginBinding, chann
 
     private var mBinding: EcosedPlugin.EcosedPluginBinding = binding
     private var mChannel: String = channel
-    private var mCallBack: MethodCallHandler? = null
+    private var mHandler: MethodCallHandler? = null
     private var mMethod: String? = null
     private var mResult: Any? = null
 
     /**
      * 设置方法调用.
-     * @param callBack 执行方法时调用EcosedMethodCallHandler.
+     * @param handler 执行方法时调用EcosedMethodCallHandler.
      */
-    fun setMethodCallHandler(callBack: MethodCallHandler?) {
-        this.mCallBack = callBack
+    fun setMethodCallHandler(handler: MethodCallHandler?) {
+        mHandler = handler
     }
 
     /**
@@ -50,7 +50,7 @@ class PluginChannel constructor(binding: EcosedPlugin.EcosedPluginBinding, chann
     internal fun execMethodCall(name: String, method: String?): Any? {
         mMethod = method
         if (name == mChannel) {
-            mCallBack?.onEcosedMethodCall(
+            mHandler?.onEcosedMethodCall(
                 call = call,
                 result = result
             )
