@@ -1,6 +1,6 @@
 package io.ecosed.plugin
 
-import android.app.Activity
+import android.content.Context
 
 /**
  * 作者: wyq0918dev
@@ -29,16 +29,16 @@ interface EcosedPlugin {
     /**
      * 插件绑定器.
      */
-    class EcosedPluginBinding constructor(activity: Activity) {
+    class EcosedPluginBinding constructor(context: Context) {
 
-        private val mActivity: Activity = activity
+        private val mContext: Context = context
 
         /**
          * 获取Activity.
          * @return Activity.
          */
-        internal fun getActivity(): Activity {
-            return mActivity
+        internal fun getContext(): Context {
+            return mContext
         }
     }
 }

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 初始化框架引擎
-        engine = PluginEngine.build(activity = this@MainActivity)
+        engine = PluginEngine.build(context = this@MainActivity)
         engine.attach()
         // 添加插件
         engine.addPlugin(

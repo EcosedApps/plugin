@@ -33,7 +33,7 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     }
 
     /**
-     * 返回EcosedPluginMethod
+     * 返回pluginChannel
      */
     override val getPluginChannel: PluginChannel
         get() = pluginChannel

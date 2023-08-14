@@ -1,6 +1,7 @@
 package io.ecosed.plugin
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 
 /**
@@ -12,7 +13,7 @@ import android.util.Log
  */
 class PluginEngine {
 
-    private lateinit var mActivity: Activity
+    private lateinit var mContext: Context
     private lateinit var mPluginList: ArrayList<EcosedPlugin>
     private var mBinding: EcosedPlugin.EcosedPluginBinding? = null
 
@@ -21,7 +22,7 @@ class PluginEngine {
      */
     fun attach() {
         mPluginList = arrayListOf()
-        mBinding = EcosedPlugin.EcosedPluginBinding(activity = mActivity)
+        mBinding = EcosedPlugin.EcosedPluginBinding(context = mContext)
     }
 
     /**
@@ -126,7 +127,7 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         fun build(
-            activity: Activity?,
+            context: Context?,
             content: (PluginEngine) -> PluginEngine = { engine ->
                 engine
             }
@@ -142,20 +143,20 @@ class PluginEngine {
 
         /**
          * 引擎构建函数.
-         * @param activity 传入Activity.
+         * @param context 传入上下文.
          * @param content 高级扩展用法.
          * @return 返回已构建的引擎.
          */
         override fun build(
-            activity: Activity?,
+            context: Context?,
             content: (PluginEngine) -> PluginEngine
         ): PluginEngine {
             content(
                 PluginEngine()
             ).let { engine ->
-                activity?.let {
+                context?.let {
                     engine.apply {
-                        mActivity = it
+                        mContext = it
                     }
                 }
                 return@build engine

@@ -1,6 +1,6 @@
 package io.ecosed.plugin
 
-import android.app.Activity
+import android.content.Context
 
 /**
  * 作者: wyq0918dev
@@ -29,8 +29,8 @@ class PluginChannel constructor(binding: EcosedPlugin.EcosedPluginBinding, chann
      * 获取Activity.
      * @return 插件附加的Activity.
      */
-    fun getActivity(): Activity {
-        return mBinding.getActivity()
+    fun getContext(): Context {
+        return mBinding.getContext()
     }
 
     /**

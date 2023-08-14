@@ -15,7 +15,7 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
      */
     override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
-        mContext = pluginChannel.getActivity()
+        mContext = pluginChannel.getContext()
         pluginChannel.setMethodCallHandler(handler = this@ToastPlugin)
     }
 
@@ -37,7 +37,7 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     }
 
     /**
-     * 返回EcosedPluginMethod
+     * 返回pluginChannel
      */
     override val getPluginChannel: PluginChannel
         get() = pluginChannel
