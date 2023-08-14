@@ -9,9 +9,9 @@ import android.content.Context
  * 描述: 插件通信通道
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class PluginChannel constructor(binding: EcosedPlugin.EcosedPluginBinding, channel: String) {
+class PluginChannel constructor(binding: PluginBinding, channel: String) {
 
-    private var mBinding: EcosedPlugin.EcosedPluginBinding = binding
+    private var mBinding: PluginBinding = binding
     private var mChannel: String = channel
     private var mHandler: MethodCallHandler? = null
     private var mMethod: String? = null

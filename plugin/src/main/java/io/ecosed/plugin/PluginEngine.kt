@@ -12,25 +12,29 @@ import android.util.Log
  */
 class PluginEngine {
 
-    private lateinit var mContext: Context
-    private lateinit var mPluginList: ArrayList<EcosedPlugin>
-    private var mBinding: EcosedPlugin.EcosedPluginBinding? = null
+    private lateinit var mBase: Context
+    private var mPluginList: ArrayList<EcosedPlugin>? = null
+    private var mBinding: PluginBinding? = null
 
     /**
      * 将引擎附加到Activity.
      */
     fun attach() {
-        mPluginList = arrayListOf()
-        mBinding = EcosedPlugin.EcosedPluginBinding(
-            context = mContext
-        )
+        if ((mPluginList == null) and (mBinding == null)){
+            mPluginList = arrayListOf()
+            mBinding = PluginBinding(
+                base = mBase
+            )
+        } else {
+            Log.e(tag, "请勿重复执行attach")
+        }
     }
 
     /**
      * 把引擎从Activity分离.
      */
     fun detach() {
-        mPluginList.clear()
+        mPluginList = null
         mBinding = null
     }
 
@@ -51,7 +55,7 @@ class PluginEngine {
             }
         }.run {
             plugins.forEach { plugin ->
-                mPluginList.add(element = plugin)
+                mPluginList?.add(element = plugin)
             }
         }
     }
@@ -73,7 +77,7 @@ class PluginEngine {
             }
         }.run {
             plugins.forEach { plugin ->
-                mPluginList.remove(element = plugin)
+                mPluginList?.remove(element = plugin)
             }
         }
     }
@@ -87,7 +91,7 @@ class PluginEngine {
     fun execMethodCall(name: String, method: String): Any? {
         var result: Any? = null
         try {
-            mPluginList.forEach { plugin ->
+            mPluginList?.forEach { plugin ->
                 val channel: PluginChannel = plugin.getPluginChannel
                 when (channel.getChannel()) {
                     name -> result = channel.execMethodCall(
@@ -120,7 +124,7 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         fun build(
-            context: Context?,
+            base: Context?,
             content: (PluginEngine) -> PluginEngine = { engine ->
                 engine
             }
@@ -136,20 +140,20 @@ class PluginEngine {
 
         /**
          * 引擎构建函数.
-         * @param context 传入上下文.
+         * @param base 传入应用程序上下文包装器的基本上下文上下文.
          * @param content 高级扩展用法.
          * @return 返回已构建的引擎.
          */
         override fun build(
-            context: Context?,
+            base: Context?,
             content: (PluginEngine) -> PluginEngine
         ): PluginEngine {
             content(
                 PluginEngine()
             ).let { engine ->
-                context?.let {
+                base?.let {
                     engine.apply {
-                        mContext = it
+                        mBase = it
                     }
                 }
                 return@build engine

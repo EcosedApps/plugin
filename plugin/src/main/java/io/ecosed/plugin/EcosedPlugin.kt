@@ -1,7 +1,5 @@
 package io.ecosed.plugin
 
-import android.content.Context
-
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
@@ -14,31 +12,17 @@ interface EcosedPlugin {
     /**
      * 插件被添加时执行.
      */
-    fun onEcosedAdded(binding: EcosedPluginBinding)
+    fun onEcosedAdded(binding: PluginBinding)
 
     /**
      * 插件被移除时执行.
      */
-    fun onEcosedRemoved(binding: EcosedPluginBinding)
+    fun onEcosedRemoved(binding: PluginBinding)
 
     /**
      * 获取插件通信通道.
      */
     val getPluginChannel: PluginChannel
 
-    /**
-     * 插件绑定器.
-     */
-    class EcosedPluginBinding constructor(context: Context) {
 
-        private val mContext: Context = context
-
-        /**
-         * 获取上下文.
-         * @return Context.
-         */
-        internal fun getContext(): Context {
-            return mContext
-        }
-    }
 }

@@ -2,6 +2,8 @@ package io.ecosed.plugin_example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import io.ecosed.plugin.EngineGreeter
+import io.ecosed.plugin.GreetMode
 import io.ecosed.plugin.PluginEngine
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
 
@@ -19,14 +21,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 初始化框架引擎
-        engine = PluginEngine.build(context = this@MainActivity)
-        engine.attach()
-        // 添加插件
-        engine.addPlugin(
-            ExamplePlugin(),
-            ToastPlugin()
-        )
+//        // 初始化框架引擎
+//        engine = PluginEngine.build(context = this@MainActivity)
+//        engine.attach()
+//        // 添加插件
+//        engine.addPlugin(
+//            ExamplePlugin(),
+//            ToastPlugin()
+//        )
+
+
+        engine = EngineGreeter.getEngine(
+            activity = this@MainActivity,
+            mode = GreetMode.Activity
+        )!!
 
         // 执行代码
         binding.textHello.text = engine.execMethodCall(
@@ -38,18 +46,22 @@ class MainActivity : AppCompatActivity() {
             name = ToastPlugin.channel,
             method = "toast"
         )
+
+
     }
 
-    /**
-     * Activity销毁时调用
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-        // 移除插件
-        engine.removePlugin(
-            ExamplePlugin(),
-            ToastPlugin()
-        )
-        engine.detach()
-    }
+//    /**
+//     * Activity销毁时调用
+//     */
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        // 移除插件
+//        engine.removePlugin(
+//            ExamplePlugin(),
+//            ToastPlugin()
+//        )
+//        engine.detach()
+//    }
+
+
 }

@@ -3,6 +3,7 @@ package io.ecosed.plugin_example
 import android.content.Context
 import android.widget.Toast
 import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
 class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
@@ -13,7 +14,7 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     /**
      * 插件被添加时执行
      */
-    override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
+    override fun onEcosedAdded(binding: PluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
         mContext = pluginChannel.getContext()
         pluginChannel.setMethodCallHandler(handler = this@ToastPlugin)
@@ -22,7 +23,7 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     /**
      * 插件被移除时执行
      */
-    override fun onEcosedRemoved(binding: EcosedPlugin.EcosedPluginBinding) {
+    override fun onEcosedRemoved(binding: PluginBinding) {
         pluginChannel.setMethodCallHandler(handler = null)
     }
 

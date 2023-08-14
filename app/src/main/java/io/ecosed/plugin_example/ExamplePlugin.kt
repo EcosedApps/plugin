@@ -1,6 +1,7 @@
 package io.ecosed.plugin_example
 
 import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
 class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
@@ -10,7 +11,7 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     /**
      * 插件被添加时执行
      */
-    override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
+    override fun onEcosedAdded(binding: PluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
         pluginChannel.setMethodCallHandler(handler = this@ExamplePlugin)
     }
@@ -18,7 +19,7 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     /**
      * 插件被移除时执行
      */
-    override fun onEcosedRemoved(binding: EcosedPlugin.EcosedPluginBinding) {
+    override fun onEcosedRemoved(binding: PluginBinding) {
         pluginChannel.setMethodCallHandler(handler = null)
     }
 
