@@ -1,6 +1,5 @@
 package io.ecosed.plugin
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 
@@ -35,11 +34,11 @@ class PluginEngine {
 
     /**
      * 添加插件.
-     * @param elements 传入你要添加的插件列表.
+     * @param plugin 传入你要添加的插件列表.
      */
-    fun addPlugin(elements: Array<EcosedPlugin>) {
+    fun addPlugin(vararg plugin: EcosedPlugin) {
         mBinding?.let { binding ->
-            elements.forEach {
+            plugin.forEach {
                 it.apply {
                     try {
                         onEcosedAdded(binding = binding)
@@ -49,7 +48,7 @@ class PluginEngine {
                 }
             }
         }.run {
-            elements.forEach {
+            plugin.forEach {
                 mPluginList.add(element = it)
             }
         }
@@ -57,11 +56,11 @@ class PluginEngine {
 
     /**
      * 移除插件.
-     * @param elements 传入你要移除的插件列表.
+     * @param plugin 传入你要移除的插件列表.
      */
-    fun removePlugin(elements: Array<EcosedPlugin>) {
+    fun removePlugin(vararg plugin: EcosedPlugin) {
         mBinding?.let { binding ->
-            elements.forEach {
+            plugin.forEach {
                 it.apply {
                     try {
                         onEcosedRemoved(binding = binding)
@@ -71,18 +70,10 @@ class PluginEngine {
                 }
             }
         }.run {
-            elements.forEach {
+            plugin.forEach {
                 mPluginList.remove(element = it)
             }
         }
-    }
-
-    /**
-     * 插件列表.
-     * @param plugin 要添加的插件,用逗号隔开.
-     */
-    fun pluginArrayOf(vararg plugin: EcosedPlugin): Array<EcosedPlugin> {
-        return arrayOf(elements = plugin)
     }
 
     /**
@@ -122,7 +113,7 @@ class PluginEngine {
 
         /**
          * 构建引擎.
-         * @param activity 传入Activity.
+         * @param context 传入Activity.
          * @param content 高级扩展用法.
          * @return 返回已构建的引擎.
          */
