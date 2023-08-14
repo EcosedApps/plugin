@@ -1,5 +1,6 @@
 package io.ecosed.plugin_example
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import io.ecosed.plugin.BuildConfig
@@ -24,10 +25,15 @@ class MyApplication : Application(), EcosedApplication {
         }
 
         override fun getPluginList(): ArrayList<EcosedPlugin> {
-            val list = pluginArrayOf()
-            list.add(ExamplePlugin())
-            list.add(ToastPlugin())
-            return list
+            return pluginArrayOf(ExamplePlugin(), ToastPlugin(), DetailPlugin())
+        }
+
+        override fun getAppName(): String {
+            return getString(R.string.app_name)
+        }
+
+        override fun getLaunchActivity(): Activity {
+            return MainActivity()
         }
     }
 

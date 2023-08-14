@@ -6,10 +6,9 @@ class PluginExecutor {
 
     internal interface Executor {
 
-        fun build(content: Companion.() -> Unit)
+        fun build(application: Application, content: Companion.() -> Unit)
 
         fun execMethodCall(
-            application: Application,
             name: String,
             method: String
         ): Any?
@@ -18,15 +17,18 @@ class PluginExecutor {
 
     companion object : Executor {
 
-        override fun build(content: Companion.() -> Unit) {
+        private lateinit var mApplication: Application
+
+        override fun build(application: Application, content: Companion.() -> Unit) {
+            mApplication = application
             return content(Companion)
         }
 
-        override fun execMethodCall(application: Application, name: String, method: String): Any? {
+        override fun execMethodCall(name: String, method: String): Any? {
             var result: Any? = null
 
-            if (application is EcosedApplication) {
-                result = (application as EcosedApplication).getEngineHost.getPluginEngine().execMethodCall(name, method)
+            if (mApplication is EcosedApplication) {
+                result = (mApplication as EcosedApplication).getEngineHost.getPluginEngine().execMethodCall(name, method)
             } else {
 
             }

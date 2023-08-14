@@ -1,6 +1,7 @@
 package io.ecosed.plugin_example
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.ecosed.plugin.PluginExecutor
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
@@ -15,19 +16,37 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // 执行代码
-        PluginExecutor.build {
+        PluginExecutor.build(application = application) {
 
             binding.textHello.text = execMethodCall(
-                application = application,
                 name = ExamplePlugin.channel,
                 method = "getText"
             ).toString()
 
             binding.buttonToast.setOnClickListener {
                 execMethodCall(
-                    application = application,
                     name = ToastPlugin.channel,
                     method = "toast"
+                )
+            }
+
+            binding.buttonAppName.setOnClickListener {
+                execMethodCall(
+                    name = DetailPlugin.channel,
+                    method = "name"
+                )?.let {
+                    Toast.makeText(
+                        this@MainActivity,
+                        it.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            binding.buttonLaunch.setOnClickListener {
+                execMethodCall(
+                    name = DetailPlugin.channel,
+                    method = "launch"
                 )
             }
         }

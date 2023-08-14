@@ -24,13 +24,15 @@ class PluginEngine {
         if ((mPluginList == null) and (mBinding == null)){
             mPluginList = arrayListOf()
             mBinding = PluginBinding(
-                base = mBase
+                baseContext = mBase,
+                appName = mApp.getEngineHost.getAppName(),
+                launchActivity = mApp.getEngineHost.getLaunchActivity()
             )
         } else if (mApp.getEngineHost.isDebug()) {
             Log.e(tag, "请勿重复执行attach")
         }
 
-        addPlugin(*mApp.getEngineHost.getPluginList())
+        addPlugin(mApp.getEngineHost.getPluginList())
 
     }
 
@@ -38,7 +40,7 @@ class PluginEngine {
      * 把引擎从Activity分离.
      */
     fun detach() {
-        removePlugin(*mApp.getEngineHost.getPluginList())
+        removePlugin(mApp.getEngineHost.getPluginList())
 
         if ((mPluginList != null) and (mBinding != null)){
             mPluginList = null
@@ -52,7 +54,7 @@ class PluginEngine {
      * 添加插件.
      * @param plugins 传入你要添加的插件,可以传入多个.
      */
-    private fun addPlugin(vararg plugins: EcosedPlugin) {
+    private fun addPlugin(plugins: ArrayList<EcosedPlugin>) {
         mBinding?.let { binding ->
             plugins.forEach { plugin ->
                 plugin.apply {
@@ -76,7 +78,7 @@ class PluginEngine {
      * 移除插件.
      * @param plugins 传入你要移除的插件,可以传入多个.
      */
-    private fun removePlugin(vararg plugins: EcosedPlugin) {
+    private fun removePlugin(plugins: ArrayList<EcosedPlugin>) {
         mBinding?.let { binding ->
             plugins.forEach { plugin ->
                 plugin.apply {
@@ -117,7 +119,7 @@ class PluginEngine {
             }
         } catch (e: Exception) {
             if (mApp.getEngineHost.isDebug()) {
-                Log.e(tag, "forEach error!")
+                Log.e(tag, "forEach error!", e)
             }
         }
         return result
