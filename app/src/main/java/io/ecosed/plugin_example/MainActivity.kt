@@ -23,11 +23,13 @@ class MainActivity : AppCompatActivity() {
                 method = "getText"
             ).toString()
 
-            execMethodCall(
-                application = application,
-                name = ToastPlugin.channel,
-                method = "toast"
-            )
+            binding.buttonToast.setOnClickListener {
+                execMethodCall(
+                    application = application,
+                    name = ToastPlugin.channel,
+                    method = "toast"
+                )
+            }
         }
     }
 }

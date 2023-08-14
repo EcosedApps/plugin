@@ -1,6 +1,5 @@
 package io.ecosed.plugin_example
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
 import io.ecosed.plugin.BuildConfig
@@ -8,12 +7,14 @@ import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.PluginEngine
+import io.ecosed.plugin.pluginArrayOf
 
 class MyApplication : Application(), EcosedApplication {
 
     private lateinit var engine: PluginEngine
 
     private val host: EcosedHost = object : EcosedHost {
+
         override fun isDebug(): Boolean {
             return BuildConfig.DEBUG
         }
@@ -22,8 +23,11 @@ class MyApplication : Application(), EcosedApplication {
             return engine
         }
 
-        override fun getPluginList(): Array<EcosedPlugin> {
-            return arrayOf(ExamplePlugin(), ToastPlugin())
+        override fun getPluginList(): ArrayList<EcosedPlugin> {
+            val list = pluginArrayOf()
+            list.add(ExamplePlugin())
+            list.add(ToastPlugin())
+            return list
         }
     }
 
