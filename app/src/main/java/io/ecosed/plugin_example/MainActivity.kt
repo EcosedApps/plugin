@@ -24,10 +24,8 @@ class MainActivity : AppCompatActivity() {
         engine.attach()
         // 添加插件
         engine.addPlugin(
-            elements = engine.pluginArrayOf(
-                ExamplePlugin(),
-                ToastPlugin()
-            )
+            ExamplePlugin(),
+            ToastPlugin()
         )
 
         // 执行代码
@@ -49,10 +47,8 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         // 移除插件
         engine.removePlugin(
-            elements = engine.pluginArrayOf(
-                ExamplePlugin(),
-                ToastPlugin()
-            )
+            ExamplePlugin(),
+            ToastPlugin()
         )
         engine.detach()
     }
