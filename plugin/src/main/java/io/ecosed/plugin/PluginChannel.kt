@@ -26,8 +26,8 @@ class PluginChannel constructor(binding: EcosedPlugin.EcosedPluginBinding, chann
     }
 
     /**
-     * 获取Activity.
-     * @return 插件附加的Activity.
+     * 获取上下文.
+     * @return Context.
      */
     fun getContext(): Context {
         return mBinding.getContext()

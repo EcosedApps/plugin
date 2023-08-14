@@ -21,7 +21,9 @@ class PluginEngine {
      */
     fun attach() {
         mPluginList = arrayListOf()
-        mBinding = EcosedPlugin.EcosedPluginBinding(context = mContext)
+        mBinding = EcosedPlugin.EcosedPluginBinding(
+            context = mContext
+        )
     }
 
     /**
@@ -34,12 +36,12 @@ class PluginEngine {
 
     /**
      * 添加插件.
-     * @param plugin 传入你要添加的插件列表.
+     * @param plugins 传入你要添加的插件,可以传入多个.
      */
-    fun addPlugin(vararg plugin: EcosedPlugin) {
+    fun addPlugin(vararg plugins: EcosedPlugin) {
         mBinding?.let { binding ->
-            plugin.forEach {
-                it.apply {
+            plugins.forEach { plugin ->
+                plugin.apply {
                     try {
                         onEcosedAdded(binding = binding)
                     } catch (e: Exception) {
@@ -48,20 +50,20 @@ class PluginEngine {
                 }
             }
         }.run {
-            plugin.forEach {
-                mPluginList.add(element = it)
+            plugins.forEach { plugin ->
+                mPluginList.add(element = plugin)
             }
         }
     }
 
     /**
      * 移除插件.
-     * @param plugin 传入你要移除的插件列表.
+     * @param plugins 传入你要移除的插件,可以传入多个.
      */
-    fun removePlugin(vararg plugin: EcosedPlugin) {
+    fun removePlugin(vararg plugins: EcosedPlugin) {
         mBinding?.let { binding ->
-            plugin.forEach {
-                it.apply {
+            plugins.forEach { plugin ->
+                plugin.apply {
                     try {
                         onEcosedRemoved(binding = binding)
                     } catch (e: Exception) {
@@ -70,8 +72,8 @@ class PluginEngine {
                 }
             }
         }.run {
-            plugin.forEach {
-                mPluginList.remove(element = it)
+            plugins.forEach { plugin ->
+                mPluginList.remove(element = plugin)
             }
         }
     }

@@ -34,8 +34,8 @@ interface EcosedPlugin {
         private val mContext: Context = context
 
         /**
-         * 获取Activity.
-         * @return Activity.
+         * 获取上下文.
+         * @return Context.
          */
         internal fun getContext(): Context {
             return mContext
