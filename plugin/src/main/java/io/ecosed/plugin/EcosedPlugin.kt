@@ -23,6 +23,4 @@ interface EcosedPlugin {
      * 获取插件通信通道.
      */
     val getPluginChannel: PluginChannel
-
-
 }

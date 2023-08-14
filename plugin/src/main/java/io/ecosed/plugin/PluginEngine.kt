@@ -13,6 +13,7 @@ import android.util.Log
 class PluginEngine {
 
     private lateinit var mBase: Context
+    private lateinit var mApp: EcosedApplication
     private var mPluginList: ArrayList<EcosedPlugin>? = null
     private var mBinding: PluginBinding? = null
 
@@ -25,31 +26,42 @@ class PluginEngine {
             mBinding = PluginBinding(
                 base = mBase
             )
-        } else {
+        } else if (mApp.getEngineHost.isDebug()) {
             Log.e(tag, "请勿重复执行attach")
         }
+
+        addPlugin(*mApp.getEngineHost.getPluginList())
+
     }
 
     /**
      * 把引擎从Activity分离.
      */
     fun detach() {
-        mPluginList = null
-        mBinding = null
+        removePlugin(*mApp.getEngineHost.getPluginList())
+
+        if ((mPluginList != null) and (mBinding != null)){
+            mPluginList = null
+            mBinding = null
+        } else if (mApp.getEngineHost.isDebug()){
+            Log.e(tag, "请勿重复执行detach")
+        }
     }
 
     /**
      * 添加插件.
      * @param plugins 传入你要添加的插件,可以传入多个.
      */
-    fun addPlugin(vararg plugins: EcosedPlugin) {
+    private fun addPlugin(vararg plugins: EcosedPlugin) {
         mBinding?.let { binding ->
             plugins.forEach { plugin ->
                 plugin.apply {
                     try {
                         onEcosedAdded(binding = binding)
                     } catch (e: Exception) {
-                        Log.e(tag, "addPlugin", e)
+                        if (mApp.getEngineHost.isDebug()) {
+                            Log.e(tag, "addPlugin", e)
+                        }
                     }
                 }
             }
@@ -64,14 +76,16 @@ class PluginEngine {
      * 移除插件.
      * @param plugins 传入你要移除的插件,可以传入多个.
      */
-    fun removePlugin(vararg plugins: EcosedPlugin) {
+    private fun removePlugin(vararg plugins: EcosedPlugin) {
         mBinding?.let { binding ->
             plugins.forEach { plugin ->
                 plugin.apply {
                     try {
                         onEcosedRemoved(binding = binding)
                     } catch (e: Exception) {
-                        Log.e(tag, "removePlugin", e)
+                        if (mApp.getEngineHost.isDebug()) {
+                            Log.e(tag, "removePlugin", e)
+                        }
                     }
                 }
             }
@@ -88,24 +102,21 @@ class PluginEngine {
      * @param method 要调用的插件中的方法.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
-    fun execMethodCall(name: String, method: String): Any? {
+    internal fun execMethodCall(name: String, method: String): Any? {
         var result: Any? = null
         try {
             mPluginList?.forEach { plugin ->
-                val channel: PluginChannel = plugin.getPluginChannel
-                when (channel.getChannel()) {
-                    name -> result = channel.execMethodCall(
-                        name = name,
-                        method = method
-                    )
-
-                    else -> if (BuildConfig.DEBUG) {
-                        Log.e(tag, "请传入有效的通道名称")
+                plugin.getPluginChannel.let {
+                    when (it.getChannel()) {
+                        name -> result = it.execMethodCall(
+                            name = name,
+                            method = method
+                        )
                     }
                 }
             }
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG) {
+            if (mApp.getEngineHost.isDebug()) {
                 Log.e(tag, "forEach error!")
             }
         }
@@ -119,12 +130,13 @@ class PluginEngine {
 
         /**
          * 构建引擎.
-         * @param context 传入Activity.
+         * @param baseContext 传入Activity.
          * @param content 高级扩展用法.
          * @return 返回已构建的引擎.
          */
         fun build(
-            base: Context?,
+            baseContext: Context?,
+            application: EcosedApplication,
             content: (PluginEngine) -> PluginEngine = { engine ->
                 engine
             }
@@ -140,21 +152,22 @@ class PluginEngine {
 
         /**
          * 引擎构建函数.
-         * @param base 传入应用程序上下文包装器的基本上下文上下文.
+         * @param baseContext 传入应用程序上下文包装器的基本上下文上下文.
+         * @param application 传入EcosedApplication
          * @param content 高级扩展用法.
          * @return 返回已构建的引擎.
          */
         override fun build(
-            base: Context?,
+            baseContext: Context?,
+            application: EcosedApplication,
             content: (PluginEngine) -> PluginEngine
         ): PluginEngine {
             content(
                 PluginEngine()
             ).let { engine ->
-                base?.let {
-                    engine.apply {
-                        mBase = it
-                    }
+                engine.apply {
+                    mBase = baseContext!!
+                    mApp = application
                 }
                 return@build engine
             }

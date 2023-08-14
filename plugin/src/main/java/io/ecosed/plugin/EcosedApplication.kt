@@ -1,5 +1,5 @@
 package io.ecosed.plugin
 
 interface EcosedApplication {
-    val getPluginEngine: PluginEngine
+    val getEngineHost: EcosedHost
 }
