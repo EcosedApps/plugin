@@ -14,35 +14,13 @@ class MyApplication : Application(), EcosedApplication {
 
     private lateinit var engine: PluginEngine
 
-    private val host: EcosedHost = object : EcosedHost {
-
-        override fun isDebug(): Boolean {
-            return BuildConfig.DEBUG
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base).run {
+            engine = PluginEngine.build(
+                baseContext = base,
+                application = this@MyApplication
+            )
         }
-
-        override fun getPluginEngine(): PluginEngine {
-            return engine
-        }
-
-        override fun getPluginList(): ArrayList<EcosedPlugin> {
-            return pluginArrayOf(ExamplePlugin(), ToastPlugin(), DetailPlugin())
-        }
-
-        override fun getAppName(): String {
-            return getString(R.string.app_name)
-        }
-
-        override fun getLaunchActivity(): Activity {
-            return MainActivity()
-        }
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        engine = PluginEngine.build(
-            baseContext = base,
-            application = this@MyApplication
-        )
     }
 
     override fun onCreate() {
@@ -56,5 +34,15 @@ class MyApplication : Application(), EcosedApplication {
     }
 
     override val getEngineHost: EcosedHost
-        get() = host
+        get() = object : EcosedHost {
+            override val isDebug: Boolean
+                get() = BuildConfig.DEBUG
+
+            override val getPluginEngine: PluginEngine
+                get() = engine
+
+            override fun getPluginList(): ArrayList<EcosedPlugin> {
+                return pluginArrayOf(ExamplePlugin(), ToastPlugin())
+            }
+        }
 }

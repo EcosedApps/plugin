@@ -1,20 +1,18 @@
 package io.ecosed.plugin
 
-import android.app.Activity
 import android.content.Context
 
 /**
- * 插件绑定器.
+ * 作者: wyq0918dev
+ * 仓库: https://github.com/ecosed/plugin
+ * 时间: 2023/08/15
+ * 描述: 插件绑定器
+ * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class PluginBinding constructor(
-    baseContext: Context,
-    appName: String?,
-    launchActivity: Activity?
-) {
+class PluginBinding constructor(baseContext: Context, isDebug: Boolean) {
 
     private val mBase: Context = baseContext
-    private val mAppName: String? = appName
-    private val mLaunchActivity: Activity? = launchActivity
+    private val mDebug: Boolean = isDebug
 
     /**
      * 获取上下文.
@@ -24,11 +22,11 @@ class PluginBinding constructor(
         return mBase.applicationContext
     }
 
-    internal fun getAppName(): String? {
-        return mAppName
-    }
-
-    internal fun getLaunchActivity(): Activity? {
-        return mLaunchActivity
+    /**
+     * 是否调试模式
+     * @return Boolean
+     */
+    internal fun isDebug(): Boolean {
+        return mDebug
     }
 }

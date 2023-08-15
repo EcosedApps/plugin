@@ -1,12 +1,11 @@
 package io.ecosed.plugin
 
-import android.app.Activity
 import android.content.Context
 
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/08/08
+ * 时间: 2023/08/15
  * 描述: 插件通信通道
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
@@ -34,12 +33,12 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         return mBinding.getApplicationContext()
     }
 
-    fun getAppName(): String? {
-        return mBinding.getAppName()
-    }
-
-    fun getLaunchActivity(): Activity? {
-        return mBinding.getLaunchActivity()
+    /**
+     * 是否调试模式.
+     * @return Boolean.
+     */
+    fun isDebug(): Boolean {
+        return mBinding.isDebug()
     }
 
     /**
@@ -60,8 +59,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         mMethod = method
         if (name == mChannel) {
             mHandler?.onEcosedMethodCall(
-                call = call,
-                result = result
+                call = call, result = result
             )
         }
         return mResult
@@ -95,13 +93,9 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          * 处理错误结果.
          */
         override fun error(
-            errorCode: String,
-            errorMessage: String?,
-            errorDetails: Any?
+            errorCode: String, errorMessage: String?, errorDetails: Any?
         ): Nothing = error(
-            message = "错误代码:$errorCode\n" +
-                    "错误消息:$errorMessage\n" +
-                    "详细信息:$errorDetails"
+            message = "错误代码:$errorCode\n错误消息:$errorMessage\n详细信息:$errorDetails"
         )
 
         /**
@@ -154,9 +148,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          * @param errorDetails 详细信息,注意可能为空.
          */
         fun error(
-            errorCode: String,
-            errorMessage: String?,
-            errorDetails: Any?
+            errorCode: String, errorMessage: String?, errorDetails: Any?
         ): Nothing
 
         /**

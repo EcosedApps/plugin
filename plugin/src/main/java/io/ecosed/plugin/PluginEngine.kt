@@ -21,32 +21,41 @@ class PluginEngine {
      * 将引擎附加到Activity.
      */
     fun attach() {
-        if ((mPluginList == null) and (mBinding == null)){
-            mPluginList = arrayListOf()
-            mBinding = PluginBinding(
-                baseContext = mBase,
-                appName = mApp.getEngineHost.getAppName(),
-                launchActivity = mApp.getEngineHost.getLaunchActivity()
-            )
-        } else if (mApp.getEngineHost.isDebug()) {
-            Log.e(tag, "请勿重复执行attach")
+        when {
+            (mPluginList == null) and (mBinding == null) -> apply {
+                mPluginList = arrayListOf()
+                mBinding = PluginBinding(
+                    baseContext = mBase, isDebug = mApp.getEngineHost.isDebug
+                )
+            }.run {
+                addPlugin(
+                    plugins = mApp.getEngineHost.getPluginList()
+                )
+            }
+
+            else -> if (mApp.getEngineHost.isDebug) {
+                Log.e(tag, "请勿重复执行attach")
+            }
         }
-
-        addPlugin(mApp.getEngineHost.getPluginList())
-
     }
 
     /**
      * 把引擎从Activity分离.
      */
     fun detach() {
-        removePlugin(mApp.getEngineHost.getPluginList())
+        when {
+            (mPluginList != null) and (mBinding != null) -> apply {
+                removePlugin(
+                    plugins = mApp.getEngineHost.getPluginList()
+                )
+            }.run {
+                mPluginList = null
+                mBinding = null
+            }
 
-        if ((mPluginList != null) and (mBinding != null)){
-            mPluginList = null
-            mBinding = null
-        } else if (mApp.getEngineHost.isDebug()){
-            Log.e(tag, "请勿重复执行detach")
+            else -> if (mApp.getEngineHost.isDebug) {
+                Log.e(tag, "请勿重复执行detach")
+            }
         }
     }
 
@@ -61,7 +70,7 @@ class PluginEngine {
                     try {
                         onEcosedAdded(binding = binding)
                     } catch (e: Exception) {
-                        if (mApp.getEngineHost.isDebug()) {
+                        if (mApp.getEngineHost.isDebug) {
                             Log.e(tag, "addPlugin", e)
                         }
                     }
@@ -85,7 +94,7 @@ class PluginEngine {
                     try {
                         onEcosedRemoved(binding = binding)
                     } catch (e: Exception) {
-                        if (mApp.getEngineHost.isDebug()) {
+                        if (mApp.getEngineHost.isDebug) {
                             Log.e(tag, "removePlugin", e)
                         }
                     }
@@ -108,17 +117,16 @@ class PluginEngine {
         var result: Any? = null
         try {
             mPluginList?.forEach { plugin ->
-                plugin.getPluginChannel.let {
-                    when (it.getChannel()) {
-                        name -> result = it.execMethodCall(
-                            name = name,
-                            method = method
+                plugin.getPluginChannel.let { channel ->
+                    when (channel.getChannel()) {
+                        name -> result = channel.execMethodCall(
+                            name = name, method = method
                         )
                     }
                 }
             }
         } catch (e: Exception) {
-            if (mApp.getEngineHost.isDebug()) {
+            if (mApp.getEngineHost.isDebug) {
                 Log.e(tag, "forEach error!", e)
             }
         }
@@ -137,7 +145,7 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         fun build(
-            baseContext: Context?,
+            baseContext: Context,
             application: EcosedApplication,
             content: (PluginEngine) -> PluginEngine = { engine ->
                 engine
@@ -160,7 +168,7 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         override fun build(
-            baseContext: Context?,
+            baseContext: Context,
             application: EcosedApplication,
             content: (PluginEngine) -> PluginEngine
         ): PluginEngine {
@@ -168,7 +176,7 @@ class PluginEngine {
                 PluginEngine()
             ).let { engine ->
                 engine.apply {
-                    mBase = baseContext!!
+                    mBase = baseContext
                     mApp = application
                 }
                 return@build engine

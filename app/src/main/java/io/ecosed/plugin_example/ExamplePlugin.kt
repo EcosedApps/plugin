@@ -7,12 +7,14 @@ import io.ecosed.plugin.PluginChannel
 class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
 
     private lateinit var pluginChannel: PluginChannel
+    private var isDebug: Boolean? = null
 
     /**
      * 插件被添加时执行
      */
     override fun onEcosedAdded(binding: PluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
+        isDebug = pluginChannel.isDebug()
         pluginChannel.setMethodCallHandler(handler = this@ExamplePlugin)
     }
 
