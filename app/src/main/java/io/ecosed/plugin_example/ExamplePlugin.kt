@@ -15,6 +15,7 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     override fun onEcosedAdded(binding: PluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
         isDebug = pluginChannel.isDebug()
+
         pluginChannel.setMethodCallHandler(handler = this@ExamplePlugin)
     }
 

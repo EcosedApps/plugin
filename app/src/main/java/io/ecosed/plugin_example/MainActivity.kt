@@ -29,5 +29,21 @@ class MainActivity : AppCompatActivity() {
                 method = "toast"
             )
         }
+
+        binding.buttonPackage.setOnClickListener {
+            execMethodCall(
+                activity = this@MainActivity,
+                name = LEDemo.channel,
+                method = "package"
+            )
+        }
+
+        binding.buttonLaunch.setOnClickListener {
+            execMethodCall(
+                activity = this@MainActivity,
+                name = LEDemo.channel,
+                method = "launch"
+            )
+        }
     }
 }

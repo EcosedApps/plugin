@@ -10,8 +10,10 @@ android {
     defaultConfig {
         minSdk = 24
     }
-    buildFeatures {
-        buildConfig = true
+    dependencies {
+        implementation(
+            dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

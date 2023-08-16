@@ -1,5 +1,6 @@
 package io.ecosed.plugin
 
+import android.app.Activity
 import android.content.Context
 
 /**
@@ -29,8 +30,8 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * 获取上下文.
      * @return Context.
      */
-    fun getApplicationContext(): Context {
-        return mBinding.getApplicationContext()
+    fun getContext(): Context? {
+        return mBinding.getContext()
     }
 
     /**
@@ -39,6 +40,20 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      */
     fun isDebug(): Boolean {
         return mBinding.isDebug()
+    }
+
+    /**
+     * 获取应用包名
+     */
+    fun getPackageName(): String? {
+        return mBinding.getPackageName()
+    }
+
+    /**
+     * 获取LaunchActivity
+     */
+    fun getLaunchActivity(): Activity? {
+        return mBinding.getLaunchActivity()
     }
 
     /**

@@ -3,7 +3,6 @@ package io.ecosed.plugin_example
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import io.ecosed.plugin.BuildConfig
 import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
@@ -14,11 +13,36 @@ class MyApplication : Application(), EcosedApplication {
 
     private lateinit var engine: PluginEngine
 
-    override fun attachBaseContext(base: Context) {
+    private val host: EcosedHost = object : EcosedHost {
+
+        override val getPluginEngine: PluginEngine
+            get() = engine
+
+        override val getPluginList: ArrayList<EcosedPlugin>
+            get() = pluginArrayOf(ExamplePlugin(), ToastPlugin())
+
+        override val isDebug: Boolean
+            get() = BuildConfig.DEBUG
+
+        override fun getLibEcosed(): EcosedPlugin {
+            return LEDemo()
+        }
+
+        override fun getPackageName(): String {
+            return BuildConfig.APPLICATION_ID
+        }
+
+        override fun getLaunchActivity(): Activity {
+            return MainActivity()
+        }
+    }
+
+    override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base).run {
             engine = PluginEngine.build(
                 baseContext = base,
-                application = this@MyApplication
+                application = this@MyApplication,
+                isUseHiddenApi = true
             )
         }
     }
@@ -34,15 +58,5 @@ class MyApplication : Application(), EcosedApplication {
     }
 
     override val getEngineHost: EcosedHost
-        get() = object : EcosedHost {
-            override val isDebug: Boolean
-                get() = BuildConfig.DEBUG
-
-            override val getPluginEngine: PluginEngine
-                get() = engine
-
-            override fun getPluginList(): ArrayList<EcosedPlugin> {
-                return pluginArrayOf(ExamplePlugin(), ToastPlugin())
-            }
-        }
+        get() = host
 }
