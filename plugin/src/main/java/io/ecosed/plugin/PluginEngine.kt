@@ -216,8 +216,8 @@ class PluginEngine {
     internal interface Builder {
 
         /**
-         * 构建引擎.
-         * @param baseContext 传入Activity.
+         * 引擎构建函数.
+         * @param baseContext 传入应用程序上下文包装器的基本上下文上下文.
          * @param application 传入EcosedApplication.
          * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
@@ -251,7 +251,7 @@ class PluginEngine {
          * 引擎构建函数.
          * @param baseContext 传入应用程序上下文包装器的基本上下文上下文.
          * @param application 传入EcosedApplication.
-         * @param isUseHiddenApi 是否使用隐藏API, LibEcosed框架专用接口.
+         * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
          */
         override fun build(
