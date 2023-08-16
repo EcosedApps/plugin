@@ -8,5 +8,7 @@ package io.ecosed.plugin
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 interface EcosedApplication {
+
+    /** 获取应用程序主机 */
     val getEngineHost: EcosedHost
 }

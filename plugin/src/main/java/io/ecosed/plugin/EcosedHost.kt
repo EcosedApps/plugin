@@ -11,36 +11,24 @@ import android.app.Activity
  */
 interface EcosedHost {
 
-    /**
-     * 获取插件引擎
-     */
+    /** 获取插件引擎. */
     val getPluginEngine: PluginEngine
 
-    /**
-     * 获取插件列表
-     */
+    /** 获取LibEcosed框架 - LibEcosed框架专用接口. */
+    val getLibEcosed: EcosedPlugin?
+        get() = null
+
+    /** 获取插件列表. */
     val getPluginList: ArrayList<EcosedPlugin>?
 
-    /**
-     * 获取是否调试模式
-     */
+    /** 设置应用启动入口Activity - LibEcosed框架专用接口. */
+    val getLaunchActivity: Activity?
+        get() = null
+
+    /** 获取是否调试模式. */
     val isDebug: Boolean
 
-    /**
-     * 传入LibEcosed框架入口
-     * LibEcosed框架专用接口
-     */
-    fun getLibEcosed(): EcosedPlugin? = null
-
-    /**
-     * 传入应用包名
-     * LibEcosed框架专用接口
-     */
-    fun getPackageName(): String? = null
-
-    /**
-     * 设置应用启动入口Activity
-     * LibEcosed框架专用接口
-     */
-    fun getLaunchActivity(): Activity? = null
+    /** 获取应用包名 - LibEcosed框架专用接口. */
+    val getPackageName: String?
+        get() = null
 }

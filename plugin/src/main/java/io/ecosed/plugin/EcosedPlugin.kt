@@ -9,18 +9,12 @@ package io.ecosed.plugin
  */
 interface EcosedPlugin {
 
-    /**
-     * 插件被添加时执行.
-     */
+    /** 插件被添加时执行. */
     fun onEcosedAdded(binding: PluginBinding)
 
-    /**
-     * 插件被移除时执行.
-     */
+    /** 插件被移除时执行. */
     fun onEcosedRemoved(binding: PluginBinding)
 
-    /**
-     * 获取插件通信通道.
-     */
+    /** 获取插件通信通道. */
     val getPluginChannel: PluginChannel
 }
