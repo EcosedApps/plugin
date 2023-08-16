@@ -12,10 +12,19 @@ import android.content.Context
  */
 class PluginChannel constructor(binding: PluginBinding, channel: String) {
 
+    /** 插件绑定器. */
     private var mBinding: PluginBinding = binding
+
+    /** 插件通道. */
     private var mChannel: String = channel
+
+    /** 方法调用处理接口. */
     private var mHandler: MethodCallHandler? = null
+
+    /** 方法名. */
     private var mMethod: String? = null
+
+    /** 返回结果. */
     private var mResult: Any? = null
 
     /**
@@ -43,14 +52,16 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /**
-     * 获取应用包名
+     * 获取应用包名 - LibEcosed框架专用接口.
+     * @return String?.
      */
     fun getPackageName(): String? {
         return mBinding.getPackageName()
     }
 
     /**
-     * 获取LaunchActivity
+     * 获取LaunchActivity - LibEcosed框架专用接口.
+     * @return Activity?.
      */
     fun getLaunchActivity(): Activity? {
         return mBinding.getLaunchActivity()
@@ -80,9 +91,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         return mResult
     }
 
-    /**
-     * 用于调用方法的接口.
-     */
+    /** 用于调用方法的接口. */
     private val call: MethodCall = object : MethodCall {
 
         /**
@@ -92,9 +101,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
             get() = mMethod
     }
 
-    /**
-     * 方法调用结果回调.
-     */
+    /** 方法调用结果回调. */
     private val result: Result = object : Result {
 
         /**

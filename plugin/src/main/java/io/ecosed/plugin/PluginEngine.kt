@@ -269,11 +269,11 @@ class PluginEngine {
                     if (use and hidden) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             HiddenApiBypass.addHiddenApiExemptions("L")
-                            if (application.getEngineHost.isDebug){
+                            if (application.getEngineHost.isDebug) {
                                 Log.d(tag, "已启用非SDK接口限制绕过")
                             }
                         } else {
-                            if (application.getEngineHost.isDebug){
+                            if (application.getEngineHost.isDebug) {
                                 Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
                             }
                         }

@@ -14,9 +14,16 @@ class PluginBinding constructor(
     context: Context?, isDebug: Boolean, packageName: String?, launch: Activity?
 ) {
 
+    /** 应用程序全局上下文. */
     private val mContext: Context? = context
+
+    /** 是否调试模式. */
     private val mDebug: Boolean = isDebug
+
+    /** 应用包名. */
     private val mPackage: String? = packageName
+
+    /** 应用启动入口Activity. */
     private val mLaunch: Activity? = launch
 
     /**
@@ -28,17 +35,25 @@ class PluginBinding constructor(
     }
 
     /**
-     * 是否调试模式
-     * @return Boolean
+     * 是否调试模式.
+     * @return Boolean.
      */
     internal fun isDebug(): Boolean {
         return mDebug
     }
 
+    /**
+     * 应用包名 - LibEcosed框架专用接口.
+     * @return String?.
+     */
     internal fun getPackageName(): String? {
         return mPackage
     }
 
+    /**
+     * 应用启动入口Activity - LibEcosed框架专用接口.
+     * @return Activity?.
+     */
     internal fun getLaunchActivity(): Activity? {
         return mLaunch
     }
