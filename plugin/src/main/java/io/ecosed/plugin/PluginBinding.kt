@@ -20,6 +20,7 @@ class PluginBinding constructor(
     /** 是否调试模式. */
     private val mDebug: Boolean = isDebug
 
+    /** LibEcosed */
     private val mLibEcosed: EcosedPlugin? = isLibEcosed
 
     /** 应用包名. */
