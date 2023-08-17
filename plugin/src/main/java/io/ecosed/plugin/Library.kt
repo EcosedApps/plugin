@@ -30,7 +30,7 @@ fun execMethodCall(
     }
 
     else -> error(
-        message = "EcosedApplication is not implemented"
+        message = "EcosedApplication接口未实现"
     )
 }
 
@@ -53,6 +53,6 @@ fun execMethodCall(
     }
 
     else -> error(
-        message = "EcosedApplication is not implemented"
+        message = "EcosedApplication接口未实现"
     )
 }

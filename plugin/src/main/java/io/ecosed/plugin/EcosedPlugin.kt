@@ -1,5 +1,7 @@
 package io.ecosed.plugin
 
+import android.app.Application
+
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
@@ -14,6 +16,9 @@ interface EcosedPlugin {
 
     /** 插件被移除时执行. */
     fun onEcosedRemoved(binding: PluginBinding)
+
+    /** 初始化SDK - LibEcosed框架专用接口 */
+    fun initSDK(application: Application) = Unit
 
     /** 获取插件通信通道. */
     val getPluginChannel: PluginChannel

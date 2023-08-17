@@ -1,10 +1,12 @@
 package io.ecosed.plugin_example
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
@@ -25,10 +27,10 @@ class LEDemo : EcosedPlugin, PluginChannel.MethodCallHandler {
         pluginChannel.getContext()?.let {
             mContext = it
         }
-        pluginChannel.getPackageName()?.let {
+        pluginChannel.getPackageName(this@LEDemo)?.let {
             pack = it
         }
-        pluginChannel.getLaunchActivity()?.let {
+        pluginChannel.getLaunchActivity(this@LEDemo)?.let {
             mActivity = it
         }
         pluginChannel.setMethodCallHandler(handler = this@LEDemo)
@@ -58,6 +60,10 @@ class LEDemo : EcosedPlugin, PluginChannel.MethodCallHandler {
             }
             else -> result.notImplemented()
         }
+    }
+
+    override fun initSDK(application: Application) {
+        super.initSDK(application)
     }
 
     /**

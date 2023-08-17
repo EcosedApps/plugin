@@ -11,7 +11,7 @@ import android.content.Context
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 class PluginBinding constructor(
-    context: Context?, isDebug: Boolean, packageName: String?, launch: Activity?
+    context: Context?, isDebug: Boolean, isLibEcosed: EcosedPlugin?, packageName: String?, launch: Activity?
 ) {
 
     /** 应用程序全局上下文. */
@@ -19,6 +19,8 @@ class PluginBinding constructor(
 
     /** 是否调试模式. */
     private val mDebug: Boolean = isDebug
+
+    private val mLibEcosed: EcosedPlugin? = isLibEcosed
 
     /** 应用包名. */
     private val mPackage: String? = packageName
@@ -44,17 +46,25 @@ class PluginBinding constructor(
 
     /**
      * 应用包名 - LibEcosed框架专用接口.
+     * @param plugin 用于判断是否是LibEcosed
      * @return String?.
      */
-    internal fun getPackageName(): String? {
-        return mPackage
+    internal fun getPackageName(plugin: EcosedPlugin): String? {
+        return when (plugin.javaClass.name) {
+            mLibEcosed?.javaClass?.name -> mPackage
+            else -> null
+        }
     }
 
     /**
      * 应用启动入口Activity - LibEcosed框架专用接口.
+     * @param plugin 用于判断是否是LibEcosed
      * @return Activity?.
      */
-    internal fun getLaunchActivity(): Activity? {
-        return mLaunch
+    internal fun getLaunchActivity(plugin: EcosedPlugin): Activity? {
+        return when (plugin.javaClass.name) {
+            mLibEcosed?.javaClass?.name -> mLaunch
+            else -> null
+        }
     }
 }

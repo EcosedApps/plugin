@@ -1,5 +1,6 @@
 package io.ecosed.plugin
 
+import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -16,6 +17,8 @@ class PluginEngine {
 
     /** 上下文包装器的基本上下文 */
     private lateinit var mBase: Context
+
+    private lateinit var mApp: Application
 
     /** 应用程序主机 */
     private lateinit var mHost: EcosedHost
@@ -41,6 +44,7 @@ class PluginEngine {
                 mBinding = PluginBinding(
                     context = mContext,
                     isDebug = mHost.isDebug,
+                    isLibEcosed = mHost.getLibEcosed,
                     packageName = mHost.getPackageName,
                     launch = mHost.getLaunchActivity
                 )
@@ -54,6 +58,10 @@ class PluginEngine {
                                 onEcosedAdded(binding = binding)
                                 if (mHost.isDebug) {
                                     Log.d(tag, "LibEcosed框架已加载")
+                                }
+                                initSDK(application = mApp)
+                                if (mHost.isDebug) {
+                                    Log.d(tag, "LibEcosed框架已初始化SDK")
                                 }
                             } catch (e: Exception) {
                                 if (mHost.isDebug) {
@@ -283,6 +291,11 @@ class PluginEngine {
                 engine.apply {
                     baseContext?.let { base ->
                         mBase = base
+                    }
+                    application.let {
+                        if (it is Application){
+                            mApp = it
+                        }
                     }
                     application.getEngineHost.let { app ->
                         mHost = app
