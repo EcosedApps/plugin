@@ -8,10 +8,11 @@ import android.util.Log
 import android.widget.Toast
 import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
-class LEDemo : EcosedPlugin, PluginChannel.MethodCallHandler {
+class LEDemo : LibEcosed {
 
     private lateinit var pluginChannel: PluginChannel
 

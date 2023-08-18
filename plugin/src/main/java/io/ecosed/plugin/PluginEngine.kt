@@ -44,7 +44,7 @@ class PluginEngine {
                 mBinding = PluginBinding(
                     context = mContext,
                     isDebug = mHost.isDebug,
-                    isLibEcosed = mHost.getLibEcosed,
+                    libEcosed = mHost.getLibEcosed,
                     packageName = mHost.getPackageName,
                     launch = mHost.getLaunchActivity
                 )

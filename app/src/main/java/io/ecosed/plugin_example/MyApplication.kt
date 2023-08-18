@@ -6,7 +6,9 @@ import android.content.Context
 import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginEngine
+import io.ecosed.plugin.execMethodCall
 import io.ecosed.plugin.pluginArrayOf
 
 class MyApplication : Application(), EcosedApplication {
@@ -26,6 +28,12 @@ class MyApplication : Application(), EcosedApplication {
     override fun onCreate() {
         super.onCreate()
         engine.attach()
+
+
+        execMethodCall(
+            application = this@MyApplication,
+            name = ExamplePlugin.channel,
+            method = "getText")
     }
 
     override fun onTerminate() {
@@ -39,7 +47,7 @@ class MyApplication : Application(), EcosedApplication {
             override val getPluginEngine: PluginEngine
                 get() = engine
 
-            override val getLibEcosed: EcosedPlugin
+            override val getLibEcosed: LibEcosed
                 get() = LEDemo()
 
             override val getPluginList: ArrayList<EcosedPlugin>
