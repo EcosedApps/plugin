@@ -1,8 +1,9 @@
 package io.ecosed.plugin_example
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.ecosed.plugin.execMethodCall
+import io.ecosed.plugin.PluginExecutor
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -16,30 +17,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 执行代码
-        binding.textHello.text = execMethodCall(
+        binding.textHello.text = PluginExecutor.execMethodCall(
             activity = this@MainActivity,
             name = ExamplePlugin.channel,
             method = "getText"
         ).toString()
 
         binding.buttonToast.setOnClickListener {
-            execMethodCall(
+            PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = ToastPlugin.channel,
                 method = "toast"
             )
         }
 
-        binding.buttonPackage.setOnClickListener {
-            execMethodCall(
-                activity = this@MainActivity,
-                name = LEDemo.channel,
-                method = "package"
-            )
-        }
+        Intent(this, MainActivity().javaClass)
 
         binding.buttonLaunch.setOnClickListener {
-            execMethodCall(
+            PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = LEDemo.channel,
                 method = "launch"

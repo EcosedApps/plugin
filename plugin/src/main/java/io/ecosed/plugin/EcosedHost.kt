@@ -15,7 +15,7 @@ interface EcosedHost {
     val getPluginEngine: PluginEngine
 
     /** 获取LibEcosed框架 - LibEcosed框架专用接口. */
-    val getLibEcosed: LibEcosed?
+    val getLibEcosed: LibEcosedImpl?
         get() = null
 
     /** 获取插件列表. */
@@ -27,8 +27,4 @@ interface EcosedHost {
 
     /** 获取是否调试模式. */
     val isDebug: Boolean
-
-    /** 获取应用包名 - LibEcosed框架专用接口. */
-    val getPackageName: String?
-        get() = null
 }

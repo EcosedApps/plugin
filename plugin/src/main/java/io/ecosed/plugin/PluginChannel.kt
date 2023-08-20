@@ -52,21 +52,12 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /**
-     * 获取应用包名 - LibEcosed框架专用接口.
-     * @param lib 用于判断是否是LibEcosed
-     * @return String?.
-     */
-    fun getPackageName(lib: LibEcosed): String? {
-        return mBinding.getPackageName(lib = lib)
-    }
-
-    /**
      * 获取LaunchActivity - LibEcosed框架专用接口.
-     * @param lib 用于判断是否是LibEcosed
+     * @param ecosed 用于判断是否是LibEcosed
      * @return Activity?.
      */
-    fun getLaunchActivity(lib: LibEcosed): Activity? {
-        return mBinding.getLaunchActivity(lib = lib)
+    fun getLaunchActivity(ecosed: LibEcosedImpl): Activity? {
+        return mBinding.getLaunchActivity(ecosed = ecosed)
     }
 
     /**

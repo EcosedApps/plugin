@@ -5,18 +5,14 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import io.ecosed.plugin.EcosedApplication
-import io.ecosed.plugin.EcosedPlugin
-import io.ecosed.plugin.LibEcosed
+import io.ecosed.plugin.LibEcosedImpl
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
-class LEDemo : LibEcosed {
+class LEDemo : LibEcosedImpl {
 
     private lateinit var pluginChannel: PluginChannel
 
-    private var pack: String? = null
     private lateinit var mActivity: Activity
     private lateinit var mContext: Context
 
@@ -27,9 +23,6 @@ class LEDemo : LibEcosed {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
         pluginChannel.getContext()?.let {
             mContext = it
-        }
-        pluginChannel.getPackageName(this@LEDemo)?.let {
-            pack = it
         }
         pluginChannel.getLaunchActivity(this@LEDemo)?.let {
             mActivity = it
@@ -53,7 +46,6 @@ class LEDemo : LibEcosed {
      */
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            "package" -> Toast.makeText(mContext, pack, Toast.LENGTH_SHORT).show()
             "launch" -> {
                 val intent = Intent(mContext, mActivity.javaClass)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

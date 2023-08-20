@@ -16,7 +16,7 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 class PluginEngine {
 
     /** 上下文包装器的基本上下文 */
-    private lateinit var mBase: Context
+    // private lateinit var mBase: Context
 
     private lateinit var mApp: Application
 
@@ -39,13 +39,12 @@ class PluginEngine {
         when {
             (mContext == null) or (mPluginList == null) or (mBinding == null) -> apply {
                 // 获取应用程序全局上下文.
-                mContext = mBase.applicationContext
+                // mContext = mBase.applicationContext
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
                     isDebug = mHost.isDebug,
                     libEcosed = mHost.getLibEcosed,
-                    packageName = mHost.getPackageName,
                     launch = mHost.getLaunchActivity
                 )
                 // 初始化插件列表.
@@ -225,26 +224,13 @@ class PluginEngine {
 
         /**
          * 引擎构建函数.
-         * @param baseContext 传入应用程序上下文包装器的基本上下文上下文.
-         * @param application 传入EcosedApplication.
+         * @param application 传入Application.
          * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
          */
         fun build(
-            baseContext: Context?,
-            application: EcosedApplication,
-            isUseHiddenApi: Boolean? = false,
-            content: (
-                PluginEngine, (Boolean) -> Unit
-            ) -> PluginEngine = { engine, hidden ->
-                if (isUseHiddenApi != null) {
-                    hidden(isUseHiddenApi).let {
-                        return@let engine
-                    }
-                } else {
-                    engine
-                }
-            }
+            application: Application,
+            isUseHiddenApi: Boolean? = false
         ): PluginEngine
     }
 
@@ -257,51 +243,46 @@ class PluginEngine {
 
         /**
          * 引擎构建函数.
-         * @param baseContext 传入应用程序上下文包装器的基本上下文上下文.
-         * @param application 传入EcosedApplication.
+         * @param application 传入Application.
          * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
          */
         override fun build(
-            baseContext: Context?,
-            application: EcosedApplication,
-            isUseHiddenApi: Boolean?,
-            content: (
-                PluginEngine, (Boolean) -> Unit
-            ) -> PluginEngine
-        ): PluginEngine {
-            content(
-                PluginEngine()
-            ) { use ->
+            application: Application,
+            isUseHiddenApi: Boolean?
+        ): PluginEngine = PluginEngine().let {
+            return@let it.apply {
+
                 isUseHiddenApi?.let { hidden ->
-                    if (use and hidden) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            HiddenApiBypass.addHiddenApiExemptions("L")
-                            if (application.getEngineHost.isDebug) {
-                                Log.d(tag, "已启用非SDK接口限制绕过")
-                            }
-                        } else {
-                            if (application.getEngineHost.isDebug) {
-                                Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
+                    if (hidden) if (application is EcosedApplication) {
+                        (application as EcosedApplication).apply {
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                HiddenApiBypass.addHiddenApiExemptions("L")
+                                if (getEngineHost.isDebug) {
+                                    Log.d(tag, "已启用非SDK接口限制绕过")
+                                }
+                            } else {
+                                if (getEngineHost.isDebug) {
+                                    Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
+                                }
                             }
                         }
                     }
                 }
-            }.let { engine ->
-                engine.apply {
-                    baseContext?.let { base ->
-                        mBase = base
-                    }
-                    application.let {
-                        if (it is Application){
-                            mApp = it
-                        }
-                    }
-                    application.getEngineHost.let { app ->
-                        mHost = app
+
+                mContext = application.applicationContext
+
+                if (application is EcosedApplication) {
+                    (application as EcosedApplication).apply {
+                        mHost = getEngineHost
                     }
                 }
-                return@build engine
+
+                application.let {
+                    mApp = it
+                }
             }
         }
     }
