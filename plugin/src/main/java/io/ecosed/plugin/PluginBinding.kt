@@ -13,7 +13,7 @@ import android.content.Context
 class PluginBinding constructor(
     context: Context?,
     isDebug: Boolean,
-    libEcosed: LibEcosedImpl?,
+    libEcosed: LibEcosed?,
     launch: Activity?
 ) {
 
@@ -24,7 +24,7 @@ class PluginBinding constructor(
     private val mDebug: Boolean = isDebug
 
     /** LibEcosed */
-    private val mLibEcosed: LibEcosedImpl? = libEcosed
+    private val mLibEcosed: LibEcosed? = libEcosed
 
     /** 应用启动入口Activity. */
     private val mLaunch: Activity? = launch
@@ -50,7 +50,7 @@ class PluginBinding constructor(
      * @param ecosed 用于判断是否是LibEcosed
      * @return Activity?.
      */
-    internal fun getLaunchActivity(ecosed: LibEcosedImpl): Activity? {
+    internal fun getLaunchActivity(ecosed: LibEcosed): Activity? {
         return when (ecosed.javaClass) {
             mLibEcosed?.javaClass -> mLaunch
             else -> null

@@ -9,7 +9,7 @@ import android.app.Application
  * 描述: LibEcosed框架接口
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-interface LibEcosedImpl : EcosedPlugin, PluginChannel.MethodCallHandler {
+interface LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
 
     /** 初始化SDK - LibEcosed框架专用接口 */
     fun initSDK(application: Application) = Unit

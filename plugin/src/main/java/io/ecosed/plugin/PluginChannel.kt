@@ -56,7 +56,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * @param ecosed 用于判断是否是LibEcosed
      * @return Activity?.
      */
-    fun getLaunchActivity(ecosed: LibEcosedImpl): Activity? {
+    fun getLaunchActivity(ecosed: LibEcosed): Activity? {
         return mBinding.getLaunchActivity(ecosed = ecosed)
     }
 

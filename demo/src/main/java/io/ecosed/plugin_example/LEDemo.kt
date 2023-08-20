@@ -5,11 +5,11 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import io.ecosed.plugin.LibEcosedImpl
+import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
-class LEDemo : LibEcosedImpl {
+class LEDemo : LibEcosed {
 
     private lateinit var pluginChannel: PluginChannel
 
