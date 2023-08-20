@@ -190,7 +190,10 @@ class PluginEngine {
                             if (mHost.isDebug) {
                                 Log.d(
                                     tag,
-                                    "插件代码调用成功!\n通道名称:${name}.\n方法名称:${method}.\n返回结果:${result}."
+                                    "插件代码调用成功!\n" +
+                                            "通道名称:${name}.\n" +
+                                            "方法名称:${method}.\n" +
+                                            "返回结果:${result}."
                                 )
                             }
                         }
@@ -217,7 +220,8 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         fun build(
-            application: Application, isUseHiddenApi: Boolean? = false
+            application: Application,
+            isUseHiddenApi: Boolean? = false
         ): PluginEngine
     }
 
@@ -235,7 +239,8 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         override fun build(
-            application: Application, isUseHiddenApi: Boolean?
+            application: Application,
+            isUseHiddenApi: Boolean?
         ): PluginEngine = PluginEngine().let {
             return@let it.apply {
                 if (application is EcosedApplication) {
@@ -246,22 +251,20 @@ class PluginEngine {
                         when (isUseHiddenApi) {
                             true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 HiddenApiBypass.addHiddenApiExemptions("L")
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "已启用非SDK接口限制绕过")
-                                }
+                                if (mHost.isDebug) Log.d(tag, "已启用非SDK接口限制绕过")
                             } else {
                                 if (mHost.isDebug) {
                                     Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
                                 }
                             }
 
-                            else -> if (mHost.isDebug) {
-                                Log.d(tag, "非SDK接口限制绕过未启用")
-                            }
+                            else -> if (mHost.isDebug) Log.d(tag, "非SDK接口限制绕过未启用")
                         }
                     }
                 } else error(
-                    "EcosedApplication接口未实现"
+                    message = "错误:EcosedApplication接口未实现.\n" +
+                            "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" +
+                            "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."
                 )
             }
         }

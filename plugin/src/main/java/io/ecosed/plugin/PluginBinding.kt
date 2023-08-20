@@ -11,7 +11,10 @@ import android.content.Context
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 class PluginBinding constructor(
-    context: Context?, isDebug: Boolean, libEcosed: LibEcosedImpl?, launch: Activity?
+    context: Context?,
+    isDebug: Boolean,
+    libEcosed: LibEcosedImpl?,
+    launch: Activity?
 ) {
 
     /** 应用程序全局上下文. */

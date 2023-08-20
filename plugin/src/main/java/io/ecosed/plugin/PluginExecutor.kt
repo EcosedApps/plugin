@@ -13,6 +13,9 @@ import android.app.Service
  */
 class PluginExecutor {
 
+    /**
+     * 执行器接口
+     */
     internal interface Executor {
 
         /**
@@ -23,7 +26,9 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
-            activity: Activity, name: String, method: String
+            activity: Activity,
+            name: String,
+            method: String
         ): Any?
 
         /**
@@ -34,7 +39,9 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
-            service: Service, name: String, method: String
+            service: Service,
+            name: String,
+            method: String
         ): Any?
 
         /**
@@ -45,11 +52,18 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
-            application: Application, name: String, method: String
+            application: Application,
+            name: String,
+            method: String
         ): Any?
     }
 
     companion object : Executor {
+
+        /** 错误信息 */
+        private const val errorMessage: String = "错误:EcosedApplication接口未实现.\n" +
+                "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" +
+                "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."
 
         /**
          * 调用插件代码的方法.
@@ -59,7 +73,9 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
-            activity: Activity, name: String, method: String
+            activity: Activity,
+            name: String,
+            method: String
         ): Any? = when (activity.application) {
             is EcosedApplication -> {
                 (activity.application as EcosedApplication).apply {
@@ -70,7 +86,7 @@ class PluginExecutor {
             }
 
             else -> error(
-                message = "EcosedApplication接口未实现"
+                message = errorMessage
             )
         }
 
@@ -82,7 +98,9 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
-            service: Service, name: String, method: String
+            service: Service,
+            name: String,
+            method: String
         ): Any? = when (service.application) {
             is EcosedApplication -> {
                 (service.application as EcosedApplication).apply {
@@ -93,7 +111,7 @@ class PluginExecutor {
             }
 
             else -> error(
-                message = "EcosedApplication接口未实现"
+                message = errorMessage
             )
         }
 
@@ -105,7 +123,9 @@ class PluginExecutor {
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
-            application: Application, name: String, method: String
+            application: Application,
+            name: String,
+            method: String
         ): Any? = when (application) {
             is EcosedApplication -> {
                 (application as EcosedApplication).apply {
@@ -116,7 +136,7 @@ class PluginExecutor {
             }
 
             else -> error(
-                message = "EcosedApplication接口未实现"
+                message = errorMessage
             )
         }
     }

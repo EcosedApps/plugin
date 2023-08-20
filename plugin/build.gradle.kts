@@ -10,11 +10,6 @@ android {
     defaultConfig {
         minSdk = 24
     }
-    dependencies {
-        implementation(
-            dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
-        )
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -32,9 +27,15 @@ android {
 afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("release") {
+            create<MavenPublication>(name = "release") {
                 from(components["release"])
             }
         }
     }
+}
+
+dependencies {
+    implementation(
+        dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
+    )
 }

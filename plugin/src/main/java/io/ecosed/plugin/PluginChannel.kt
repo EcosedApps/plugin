@@ -108,9 +108,13 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          * 处理错误结果.
          */
         override fun error(
-            errorCode: String, errorMessage: String?, errorDetails: Any?
+            errorCode: String,
+            errorMessage: String?,
+            errorDetails: Any?
         ): Nothing = error(
-            message = "错误代码:$errorCode\n错误消息:$errorMessage\n详细信息:$errorDetails"
+            message = "错误代码:$errorCode\n" +
+                    "错误消息:$errorMessage\n" +
+                    "详细信息:$errorDetails"
         )
 
         /**
@@ -163,7 +167,9 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          * @param errorDetails 详细信息,注意可能为空.
          */
         fun error(
-            errorCode: String, errorMessage: String?, errorDetails: Any?
+            errorCode: String,
+            errorMessage: String?,
+            errorDetails: Any?
         ): Nothing
 
         /**
