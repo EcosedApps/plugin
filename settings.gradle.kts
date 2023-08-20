@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "EcosedPlugin"
-include(":app")
+include(":demo")
 include(":plugin")
