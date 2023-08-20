@@ -227,9 +227,7 @@ class PluginEngine {
 
     companion object : Builder {
 
-        /**
-         * 用于打印日志的标签.
-         */
+        /** 用于打印日志的标签. */
         private const val tag: String = "PluginEngine"
 
         /**
