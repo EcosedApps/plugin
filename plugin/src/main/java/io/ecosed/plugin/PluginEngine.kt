@@ -9,22 +9,20 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/08/08
+ * 时间: 2023/08/21
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 class PluginEngine {
 
-    /** 上下文包装器的基本上下文 */
-    // private lateinit var mBase: Context
-
+    /** 应用程序 */
     private lateinit var mApp: Application
 
     /** 应用程序主机 */
     private lateinit var mHost: EcosedHost
 
     /** 应用程序全局上下文, 非UI上下文 */
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
 
     /** 插件绑定器 */
     private var mBinding: PluginBinding? = null
@@ -37,9 +35,7 @@ class PluginEngine {
      */
     fun attach() {
         when {
-            (mContext == null) or (mPluginList == null) or (mBinding == null) -> apply {
-                // 获取应用程序全局上下文.
-                // mContext = mBase.applicationContext
+            (mPluginList == null) or (mBinding == null) -> apply {
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
@@ -114,7 +110,7 @@ class PluginEngine {
      */
     fun detach() {
         when {
-            (mContext != null) or (mPluginList != null) or (mBinding != null) -> apply {
+            (mPluginList != null) or (mBinding != null) -> apply {
                 // 销毁LibEcosed框架 (如果使用了的话).
                 mHost.getLibEcosed?.let { ecosed ->
                     mBinding?.let { binding ->
@@ -163,8 +159,6 @@ class PluginEngine {
                         }
                     }
                 }
-                // 销毁应用程序全局上下文.
-                mContext = null
                 // 销毁插件列表.
                 mPluginList = null
                 // 销毁插件绑定器.
@@ -195,14 +189,8 @@ class PluginEngine {
                             )
                             if (mHost.isDebug) {
                                 Log.d(
-                                    tag, "插件代码调用成功!\n" +
-                                            "通道名称:${name}.\n" +
-                                            "方法名称:${method}.\n" +
-                                            "返回结果:${
-                                                if (result == null) {
-                                                    "返回结果为空"
-                                                } else result
-                                            }."
+                                    tag,
+                                    "插件代码调用成功!\n通道名称:${name}.\n方法名称:${method}.\n返回结果:${result}."
                                 )
                             }
                         }
@@ -229,8 +217,7 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         fun build(
-            application: Application,
-            isUseHiddenApi: Boolean? = false
+            application: Application, isUseHiddenApi: Boolean? = false
         ): PluginEngine
     }
 
@@ -248,41 +235,34 @@ class PluginEngine {
          * @return 返回已构建的引擎.
          */
         override fun build(
-            application: Application,
-            isUseHiddenApi: Boolean?
+            application: Application, isUseHiddenApi: Boolean?
         ): PluginEngine = PluginEngine().let {
             return@let it.apply {
-
-                isUseHiddenApi?.let { hidden ->
-                    if (hidden) if (application is EcosedApplication) {
-                        (application as EcosedApplication).apply {
-
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (application is EcosedApplication) {
+                    application.apply {
+                        mApp = application
+                        mContext = applicationContext
+                        mHost = getEngineHost
+                        when (isUseHiddenApi) {
+                            true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 HiddenApiBypass.addHiddenApiExemptions("L")
-                                if (getEngineHost.isDebug) {
+                                if (mHost.isDebug) {
                                     Log.d(tag, "已启用非SDK接口限制绕过")
                                 }
                             } else {
-                                if (getEngineHost.isDebug) {
+                                if (mHost.isDebug) {
                                     Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
                                 }
                             }
+
+                            else -> if (mHost.isDebug) {
+                                Log.d(tag, "非SDK接口限制绕过未启用")
+                            }
                         }
                     }
-                }
-
-                mContext = application.applicationContext
-
-                if (application is EcosedApplication) {
-                    (application as EcosedApplication).apply {
-                        mHost = getEngineHost
-                    }
-                }
-
-                application.let {
-                    mApp = it
-                }
+                } else error(
+                    "EcosedApplication接口未实现"
+                )
             }
         }
     }

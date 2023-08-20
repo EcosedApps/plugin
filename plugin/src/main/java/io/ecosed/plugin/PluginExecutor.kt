@@ -4,6 +4,13 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 
+/**
+ * 作者: wyq0918dev
+ * 仓库: https://github.com/ecosed/plugin
+ * 时间: 2023/08/21
+ * 描述: 插件方法执行器
+ * 文档: https://github.com/ecosed/plugin/blob/master/README.md
+ */
 class PluginExecutor {
 
     internal interface Executor {

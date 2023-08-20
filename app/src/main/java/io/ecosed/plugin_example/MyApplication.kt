@@ -7,8 +7,6 @@ import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.LibEcosedImpl
 import io.ecosed.plugin.PluginEngine
-import io.ecosed.plugin.PluginExecutor
-import io.ecosed.plugin.pluginArrayOf
 
 class MyApplication : Application(), EcosedApplication {
 
@@ -21,12 +19,6 @@ class MyApplication : Application(), EcosedApplication {
             isUseHiddenApi = true
         )
         engine.attach()
-
-
-        PluginExecutor.execMethodCall(
-            application = this@MyApplication,
-            name = ExamplePlugin.channel,
-            method = "getText")
     }
 
     override fun onTerminate() {
@@ -44,7 +36,7 @@ class MyApplication : Application(), EcosedApplication {
                 get() = LEDemo()
 
             override val getPluginList: ArrayList<EcosedPlugin>
-                get() = pluginArrayOf(ExamplePlugin(), ToastPlugin())
+                get() = arrayListOf(ExamplePlugin(), ToastPlugin())
 
             override val getLaunchActivity: Activity
                 get() = MainActivity()

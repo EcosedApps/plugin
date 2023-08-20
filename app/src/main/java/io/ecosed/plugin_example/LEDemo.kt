@@ -51,6 +51,7 @@ class LEDemo : LibEcosedImpl {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 mContext.startActivity(intent)
             }
+
             else -> result.notImplemented()
         }
     }
