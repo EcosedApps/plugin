@@ -9,7 +9,7 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/08/21
+ * 时间: 2023/08/22
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
@@ -68,7 +68,29 @@ class PluginEngine {
                     }.run {
                         mPluginList?.add(element = ecosed)
                         if (mHost.isDebug) {
-                            Log.d(tag, "LibEcosed框架已添加")
+                            Log.d(tag, "LibEcosed框架已添加到插件列表")
+                        }
+                    }
+                }
+                // 加载框架扩展 (如果使用了的话).
+                mHost.getExtension?.let { extension ->
+                    mBinding?.let { binding ->
+                        extension.apply {
+                            try {
+                                onEcosedAdded(binding = binding)
+                                if (mHost.isDebug) {
+                                    Log.d(tag, "框架扩展已加载")
+                                }
+                            } catch (e: Exception) {
+                                if (mHost.isDebug) {
+                                    Log.e(tag, "框架扩展加载失败!", e)
+                                }
+                            }
+                        }
+                    }.run {
+                        mPluginList?.add(element = extension)
+                        if (mHost.isDebug) {
+                            Log.d(tag, "框架扩展已添加到插件列表")
                         }
                     }
                 }
@@ -93,7 +115,7 @@ class PluginEngine {
                         plugins.forEach { plugin ->
                             mPluginList?.add(element = plugin)
                             if (mHost.isDebug) {
-                                Log.d(tag, "插件${plugin.javaClass.name}已添加")
+                                Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
                             }
                         }
                     }

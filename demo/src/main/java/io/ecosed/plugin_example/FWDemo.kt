@@ -1,5 +1,6 @@
 package io.ecosed.plugin_example
 
+import android.widget.Toast
 import io.ecosed.plugin.EcosedExtension
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
