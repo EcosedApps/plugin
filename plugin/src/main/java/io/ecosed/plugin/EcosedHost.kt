@@ -14,12 +14,12 @@ interface EcosedHost {
     /** 获取插件引擎. */
     val getPluginEngine: PluginEngine
 
-    /** 获取LibEcosed框架 - LibEcosed框架专用接口. */
-    val getLibEcosed: LibEcosed?
-        get() = null
-
     /** 获取框架扩展. */
     val getExtension: EcosedExtension?
+        get() = null
+
+    /** 获取LibEcosed框架 - LibEcosed框架专用接口. */
+    val getLibEcosed: LibEcosed?
         get() = null
 
     /** 获取插件列表. */

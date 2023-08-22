@@ -46,6 +46,28 @@ class PluginEngine {
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
+                // 加载框架扩展 (如果使用了的话).
+                mHost.getExtension?.let { extension ->
+                    mBinding?.let { binding ->
+                        extension.apply {
+                            try {
+                                onEcosedAdded(binding = binding)
+                                if (mHost.isDebug) {
+                                    Log.d(tag, "框架扩展已加载")
+                                }
+                            } catch (e: Exception) {
+                                if (mHost.isDebug) {
+                                    Log.e(tag, "框架扩展加载失败!", e)
+                                }
+                            }
+                        }
+                    }.run {
+                        mPluginList?.add(element = extension)
+                        if (mHost.isDebug) {
+                            Log.d(tag, "框架扩展已添加到插件列表")
+                        }
+                    }
+                }
                 // 加载LibEcosed框架 (如果使用了的话).
                 mHost.getLibEcosed?.let { ecosed ->
                     mBinding?.let { binding ->
@@ -69,28 +91,6 @@ class PluginEngine {
                         mPluginList?.add(element = ecosed)
                         if (mHost.isDebug) {
                             Log.d(tag, "LibEcosed框架已添加到插件列表")
-                        }
-                    }
-                }
-                // 加载框架扩展 (如果使用了的话).
-                mHost.getExtension?.let { extension ->
-                    mBinding?.let { binding ->
-                        extension.apply {
-                            try {
-                                onEcosedAdded(binding = binding)
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "框架扩展已加载")
-                                }
-                            } catch (e: Exception) {
-                                if (mHost.isDebug) {
-                                    Log.e(tag, "框架扩展加载失败!", e)
-                                }
-                            }
-                        }
-                    }.run {
-                        mPluginList?.add(element = extension)
-                        if (mHost.isDebug) {
-                            Log.d(tag, "框架扩展已添加到插件列表")
                         }
                     }
                 }
@@ -134,6 +134,32 @@ class PluginEngine {
     fun detach() {
         when {
             (mPluginList != null) or (mBinding != null) -> apply {
+                // 移除所有插件.
+                mHost.getPluginList?.let { plugins ->
+                    mBinding?.let { binding ->
+                        plugins.forEach { plugin ->
+                            plugin.apply {
+                                try {
+                                    onEcosedRemoved(binding = binding)
+                                    if (mHost.isDebug) {
+                                        Log.d(tag, "插件${plugin.javaClass.name}已销毁")
+                                    }
+                                } catch (e: Exception) {
+                                    if (mHost.isDebug) {
+                                        Log.e(tag, "移除插件失败!", e)
+                                    }
+                                }
+                            }
+                        }
+                    }.run {
+                        plugins.forEach { plugin ->
+                            mPluginList?.remove(element = plugin)
+                            if (mHost.isDebug) {
+                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
+                            }
+                        }
+                    }
+                }
                 // 销毁LibEcosed框架 (如果使用了的话).
                 mHost.getLibEcosed?.let { ecosed ->
                     mBinding?.let { binding ->
@@ -175,32 +201,6 @@ class PluginEngine {
                         mPluginList?.remove(element = extension)
                         if (mHost.isDebug) {
                             Log.d(tag, "框架扩展已从插件列表移除")
-                        }
-                    }
-                }
-                // 移除所有插件.
-                mHost.getPluginList?.let { plugins ->
-                    mBinding?.let { binding ->
-                        plugins.forEach { plugin ->
-                            plugin.apply {
-                                try {
-                                    onEcosedRemoved(binding = binding)
-                                    if (mHost.isDebug) {
-                                        Log.d(tag, "插件${plugin.javaClass.name}已销毁")
-                                    }
-                                } catch (e: Exception) {
-                                    if (mHost.isDebug) {
-                                        Log.e(tag, "移除插件失败!", e)
-                                    }
-                                }
-                            }
-                        }
-                    }.run {
-                        plugins.forEach { plugin ->
-                            mPluginList?.remove(element = plugin)
-                            if (mHost.isDebug) {
-                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
-                            }
                         }
                     }
                 }
