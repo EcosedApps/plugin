@@ -40,5 +40,13 @@ class MainActivity : AppCompatActivity() {
                 method = "launch"
             )
         }
+
+        binding.buttonSettings.setOnClickListener {
+            PluginExecutor.execMethodCall(
+                activity = this@MainActivity,
+                name = LEDemo.channel,
+                method = "settings"
+            )
+        }
     }
 }

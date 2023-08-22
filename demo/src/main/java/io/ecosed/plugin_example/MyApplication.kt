@@ -3,6 +3,7 @@ package io.ecosed.plugin_example
 import android.app.Activity
 import android.app.Application
 import io.ecosed.plugin.EcosedApplication
+import io.ecosed.plugin.EcosedExtension
 import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.LibEcosed
@@ -34,6 +35,9 @@ class MyApplication : Application(), EcosedApplication {
 
             override val getLibEcosed: LibEcosed
                 get() = LEDemo()
+
+            override val getExtension: EcosedExtension
+                get() = FWDemo()
 
             override val getPluginList: ArrayList<EcosedPlugin>
                 get() = arrayListOf(ExamplePlugin(), ToastPlugin())

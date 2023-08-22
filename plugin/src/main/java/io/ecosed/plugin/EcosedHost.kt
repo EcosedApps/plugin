@@ -18,6 +18,10 @@ interface EcosedHost {
     val getLibEcosed: LibEcosed?
         get() = null
 
+    /** 获取框架扩展. */
+    val getExtension: EcosedExtension?
+        get() = null
+
     /** 获取插件列表. */
     val getPluginList: ArrayList<EcosedPlugin>?
 
