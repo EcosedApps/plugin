@@ -32,6 +32,7 @@ class PluginBinding constructor(
 
     /** 应用设置Activity. */
     private val mSettings: Activity? = settings
+
     /**
      * 获取上下文.
      * @return Context.

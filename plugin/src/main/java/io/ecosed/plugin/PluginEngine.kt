@@ -152,7 +152,29 @@ class PluginEngine {
                     }.run {
                         mPluginList?.remove(element = ecosed)
                         if (mHost.isDebug) {
-                            Log.d(tag, "LibEcosed框架已移除")
+                            Log.d(tag, "LibEcosed框架已从插件列表移除")
+                        }
+                    }
+                }
+                // 销毁框架扩展 (如果使用了的话).
+                mHost.getExtension?.let { extension ->
+                    mBinding?.let { binding ->
+                        extension.apply {
+                            try {
+                                onEcosedRemoved(binding = binding)
+                                if (mHost.isDebug) {
+                                    Log.d(tag, "框架扩展已销毁")
+                                }
+                            } catch (e: Exception) {
+                                if (mHost.isDebug) {
+                                    Log.e(tag, "框架扩展销毁失败!", e)
+                                }
+                            }
+                        }
+                    }.run {
+                        mPluginList?.remove(element = extension)
+                        if (mHost.isDebug) {
+                            Log.d(tag, "框架扩展已从插件列表移除")
                         }
                     }
                 }
@@ -177,7 +199,7 @@ class PluginEngine {
                         plugins.forEach { plugin ->
                             mPluginList?.remove(element = plugin)
                             if (mHost.isDebug) {
-                                Log.d(tag, "插件${plugin.javaClass.name}已移除")
+                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
                             }
                         }
                     }
