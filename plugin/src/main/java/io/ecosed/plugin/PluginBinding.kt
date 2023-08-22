@@ -14,7 +14,8 @@ class PluginBinding constructor(
     context: Context?,
     isDebug: Boolean,
     libEcosed: LibEcosed?,
-    launch: Activity?
+    launch: Activity?,
+    settings: Activity?
 ) {
 
     /** 应用程序全局上下文. */
@@ -29,6 +30,8 @@ class PluginBinding constructor(
     /** 应用启动入口Activity. */
     private val mLaunch: Activity? = launch
 
+    /** 应用设置Activity. */
+    private val mSettings: Activity? = settings
     /**
      * 获取上下文.
      * @return Context.
@@ -53,6 +56,18 @@ class PluginBinding constructor(
     internal fun getLaunchActivity(ecosed: LibEcosed): Activity? {
         return when (ecosed.javaClass) {
             mLibEcosed?.javaClass -> mLaunch
+            else -> null
+        }
+    }
+
+    /**
+     * 应用设置Activity - LibEcosed框架专用接口.
+     * @param ecosed 用于判断是否是LibEcosed
+     * @return Activity?.
+     */
+    internal fun getSettingsActivity(ecosed: LibEcosed): Activity? {
+        return when (ecosed.javaClass) {
+            mLibEcosed?.javaClass -> mSettings
             else -> null
         }
     }

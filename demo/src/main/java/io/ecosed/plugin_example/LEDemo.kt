@@ -14,6 +14,7 @@ class LEDemo : LibEcosed {
     private lateinit var pluginChannel: PluginChannel
 
     private lateinit var mActivity: Activity
+    private lateinit var mSettings: Activity
     private lateinit var mContext: Context
 
     /**
@@ -26,6 +27,9 @@ class LEDemo : LibEcosed {
         }
         pluginChannel.getLaunchActivity(this@LEDemo)?.let {
             mActivity = it
+        }
+        pluginChannel.getSettingsActivity(this@LEDemo)?.let {
+            mSettings = it
         }
         pluginChannel.setMethodCallHandler(handler = this@LEDemo)
 
@@ -48,6 +52,11 @@ class LEDemo : LibEcosed {
         when (call.method) {
             "launch" -> {
                 val intent = Intent(mContext, mActivity.javaClass)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                mContext.startActivity(intent)
+            }
+            "settings" -> {
+                val intent = Intent(mContext, mSettings.javaClass)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 mContext.startActivity(intent)
             }

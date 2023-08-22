@@ -21,8 +21,12 @@ interface EcosedHost {
     /** 获取插件列表. */
     val getPluginList: ArrayList<EcosedPlugin>?
 
-    /** 设置应用启动入口Activity - LibEcosed框架专用接口. */
+    /** 应用启动入口Activity - LibEcosed框架专用接口. */
     val getLaunchActivity: Activity?
+        get() = null
+
+    /** 应用设置Activity - LibEcosed框架专用接口. */
+    val getSettingsActivity: Activity?
         get() = null
 
     /** 获取是否调试模式. */

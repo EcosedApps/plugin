@@ -41,7 +41,8 @@ class PluginEngine {
                     context = mContext,
                     isDebug = mHost.isDebug,
                     libEcosed = mHost.getLibEcosed,
-                    launch = mHost.getLaunchActivity
+                    launch = mHost.getLaunchActivity,
+                    settings = mHost.getSettingsActivity
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()

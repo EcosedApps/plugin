@@ -41,6 +41,9 @@ class MyApplication : Application(), EcosedApplication {
             override val getLaunchActivity: Activity
                 get() = MainActivity()
 
+            override val getSettingsActivity: Activity
+                get() = SettingsActivity()
+
             override val isDebug: Boolean
                 get() = BuildConfig.DEBUG
         }

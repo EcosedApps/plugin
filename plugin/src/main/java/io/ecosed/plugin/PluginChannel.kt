@@ -61,6 +61,15 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /**
+     * 获取SettingsActivity - LibEcosed框架专用接口.
+     * @param ecosed 用于判断是否是LibEcosed
+     * @return Activity?.
+     */
+    fun getSettingsActivity(ecosed: LibEcosed): Activity? {
+        return mBinding.getSettingsActivity(ecosed = ecosed)
+    }
+
+    /**
      * 获取通道.
      * @return 通道名称.
      */
