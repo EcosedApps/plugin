@@ -35,7 +35,6 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation(
-        dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
-    )
+    implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
+    implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
 }

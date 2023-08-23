@@ -1,7 +1,9 @@
 package io.ecosed.plugin_example
 
-import android.app.Activity
 import android.app.Application
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedExtension
 import io.ecosed.plugin.EcosedHost
@@ -42,11 +44,14 @@ class MyApplication : Application(), EcosedApplication {
             override val getPluginList: ArrayList<EcosedPlugin>
                 get() = arrayListOf(ExamplePlugin(), ToastPlugin())
 
-            override val getLaunchActivity: Activity
-                get() = MainActivity()
+            override val getMainFragment: Fragment
+                get() = MainFragment()
 
-            override val getSettingsActivity: Activity
-                get() = SettingsActivity()
+            override val getProductLogo: Drawable?
+                get() = ContextCompat.getDrawable(
+                    this@MyApplication,
+                    R.drawable.baseline_android_24
+                )
 
             override val isDebug: Boolean
                 get() = BuildConfig.DEBUG

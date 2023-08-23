@@ -1,8 +1,11 @@
 package io.ecosed.plugin_example
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import io.ecosed.plugin.PluginExecutor
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
 
@@ -34,19 +37,18 @@ class MainActivity : AppCompatActivity() {
         Intent(this, MainActivity().javaClass)
 
         binding.buttonLaunch.setOnClickListener {
-            PluginExecutor.execMethodCall(
+            Toast.makeText(this, (PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = LEDemo.channel,
-                method = "launch"
-            )
+                method = "main"
+            ) as Fragment).javaClass.name, Toast.LENGTH_SHORT).show()
+
         }
 
-        binding.buttonSettings.setOnClickListener {
-            PluginExecutor.execMethodCall(
-                activity = this@MainActivity,
-                name = LEDemo.channel,
-                method = "settings"
-            )
-        }
+        binding.logo.setImageDrawable(PluginExecutor.execMethodCall(
+            activity = this@MainActivity,
+            name = LEDemo.channel,
+            method = "logo"
+        ) as Drawable)
     }
 }

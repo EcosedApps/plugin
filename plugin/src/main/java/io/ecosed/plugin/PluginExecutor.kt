@@ -3,6 +3,7 @@ package io.ecosed.plugin
 import android.app.Activity
 import android.app.Application
 import android.app.Service
+import androidx.fragment.app.Fragment
 
 /**
  * 作者: wyq0918dev
@@ -20,7 +21,7 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param activity 传入Activity
+         * @param activity 传入Activity.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.
@@ -33,7 +34,20 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param service 传入Service
+         * @param fragment 传入Fragment.
+         * @param name 要调用的插件的通道.
+         * @param method 要调用的插件中的方法.
+         * @return 返回方法执行后的返回值,类型为Any?.
+         */
+        fun execMethodCall(
+            fragment: Fragment,
+            name: String,
+            method: String
+        ): Any?
+
+        /**
+         * 调用插件代码的方法.
+         * @param service 传入Service.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.
@@ -46,7 +60,7 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param application 传入Application
+         * @param application 传入Application.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.
@@ -67,7 +81,7 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param activity 传入Activity
+         * @param activity 传入Activity.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.
@@ -92,7 +106,32 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param service 传入Service
+         * @param fragment 传入Fragment.
+         * @param name 要调用的插件的通道.
+         * @param method 要调用的插件中的方法.
+         * @return 返回方法执行后的返回值,类型为Any?.
+         */
+        override fun execMethodCall(
+            fragment: Fragment,
+            name: String,
+            method: String
+        ): Any? = when (fragment.requireActivity().application) {
+            is EcosedApplication -> {
+                (fragment.requireActivity().application as EcosedApplication).apply {
+                    getEngineHost.getPluginEngine.apply {
+                        return execMethodCall(name, method)
+                    }
+                }
+            }
+
+            else -> error(
+                message = errorMessage
+            )
+        }
+
+        /**
+         * 调用插件代码的方法.
+         * @param service 传入Service.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.
@@ -117,7 +156,7 @@ class PluginExecutor {
 
         /**
          * 调用插件代码的方法.
-         * @param application 传入Application
+         * @param application 传入Application.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @return 返回方法执行后的返回值,类型为Any?.

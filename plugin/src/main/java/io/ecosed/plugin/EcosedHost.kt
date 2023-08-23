@@ -1,6 +1,7 @@
 package io.ecosed.plugin
 
-import android.app.Activity
+import android.graphics.drawable.Drawable
+import androidx.fragment.app.Fragment
 
 /**
  * 作者: wyq0918dev
@@ -25,12 +26,12 @@ interface EcosedHost {
     /** 获取插件列表. */
     val getPluginList: ArrayList<EcosedPlugin>?
 
-    /** 应用启动入口Activity - LibEcosed框架专用接口. */
-    val getLaunchActivity: Activity?
+    /** 应用入口主片段 - LibEcosed框架专用接口. */
+    val getMainFragment: Fragment?
         get() = null
 
-    /** 应用设置Activity - LibEcosed框架专用接口. */
-    val getSettingsActivity: Activity?
+    /** 产品图标 - LibEcosed框架专用接口. */
+    val getProductLogo: Drawable?
         get() = null
 
     /** 获取是否调试模式. */

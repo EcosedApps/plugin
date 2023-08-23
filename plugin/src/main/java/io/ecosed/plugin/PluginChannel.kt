@@ -1,7 +1,8 @@
 package io.ecosed.plugin
 
-import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.fragment.app.Fragment
 
 /**
  * 作者: wyq0918dev
@@ -52,21 +53,21 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /**
-     * 获取LaunchActivity - LibEcosed框架专用接口.
+     * 获取应用入口主片段 - LibEcosed框架专用接口.
      * @param ecosed 用于判断是否是LibEcosed
-     * @return Activity?.
+     * @return Fragment?.
      */
-    fun getLaunchActivity(ecosed: LibEcosed): Activity? {
-        return mBinding.getLaunchActivity(ecosed = ecosed)
+    fun getMainFragment(ecosed: LibEcosed): Fragment? {
+        return mBinding.getMainFragment(ecosed = ecosed)
     }
 
     /**
-     * 获取SettingsActivity - LibEcosed框架专用接口.
+     * 获取产品标志 - LibEcosed框架专用接口.
      * @param ecosed 用于判断是否是LibEcosed
-     * @return Activity?.
+     * @return Drawable?.
      */
-    fun getSettingsActivity(ecosed: LibEcosed): Activity? {
-        return mBinding.getSettingsActivity(ecosed = ecosed)
+    fun getProductLogo(ecosed: LibEcosed): Drawable? {
+        return mBinding.getProductLogo(ecosed = ecosed)
     }
 
     /**
