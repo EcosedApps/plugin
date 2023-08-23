@@ -52,7 +52,7 @@ class PluginBinding constructor(
 
     /**
      * 应用入口主片段 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed
+     * @param ecosed 用于判断是否是LibEcosed.
      * @return Fragment?.
      */
     internal fun getMainFragment(ecosed: LibEcosed): Fragment? {
@@ -64,7 +64,7 @@ class PluginBinding constructor(
 
     /**
      * 获取产品图标 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed
+     * @param ecosed 用于判断是否是LibEcosed.
      * @return Drawable?.
      */
     internal fun getProductLogo(ecosed: LibEcosed): Drawable? {

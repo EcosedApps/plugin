@@ -54,7 +54,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
 
     /**
      * 获取应用入口主片段 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed
+     * @param ecosed 用于判断是否是LibEcosed.
      * @return Fragment?.
      */
     fun getMainFragment(ecosed: LibEcosed): Fragment? {
@@ -63,7 +63,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
 
     /**
      * 获取产品标志 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed
+     * @param ecosed 用于判断是否是LibEcosed.
      * @return Drawable?.
      */
     fun getProductLogo(ecosed: LibEcosed): Drawable? {
