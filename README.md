@@ -15,4 +15,4 @@ dependencies { implementation("com.github.ecosed:plugin:[![](https://jitpack.io/
 
 4.创建插件，点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin/blob/master/app/src/main/java/io/ecosed/plugin_example/ExamplePlugin.kt)
 
-5.在Application全局类中初始化并添加插件，点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin/blob/master/app/src/main/java/io/ecosed/plugin_example/MyApplication.kt)
+5.在Application全局类中初始化，点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin/blob/master/app/src/main/java/io/ecosed/plugin_example/MyApplication.kt)
