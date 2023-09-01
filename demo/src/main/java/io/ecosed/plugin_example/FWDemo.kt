@@ -13,9 +13,9 @@ class FWDemo : EcosedExtension() {
         pluginChannel.setMethodCallHandler(this)
     }
 
-    override fun onEcosedRemoved(binding: PluginBinding) {
-        pluginChannel.setMethodCallHandler(null)
-    }
+//    override fun onEcosedRemoved(binding: PluginBinding) {
+//        pluginChannel.setMethodCallHandler(null)
+//    }
 
     override val getPluginChannel: PluginChannel
         get() = pluginChannel

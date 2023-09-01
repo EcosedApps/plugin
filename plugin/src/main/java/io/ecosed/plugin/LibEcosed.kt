@@ -13,16 +13,16 @@ import android.content.ContextWrapper
  */
 abstract class LibEcosed : ContextWrapper(null), EcosedPlugin, PluginChannel.MethodCallHandler {
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
     abstract fun init()
 
     /** 初始化SDK - LibEcosed框架专用接口. */
     open fun initSDKs(application: Application) = Unit
 
     open fun initSDKInitialized() = Unit
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
 
     internal fun attach(base: Context?) {
         attachBaseContext(base)

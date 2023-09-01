@@ -1,13 +1,12 @@
 package io.ecosed.plugin_example
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import io.ecosed.plugin.EcosedClient
 import io.ecosed.plugin.EcosedExtension
@@ -19,6 +18,8 @@ class MyClient : EcosedClient() {
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
+        setContentView(R.layout.ecosed_client_main)
+        Toast.makeText(this, "onCreate执行成功！！！", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(
@@ -34,29 +35,27 @@ class MyClient : EcosedClient() {
     }
 
 
+    override fun getLibEcosed(): LibEcosed {
+        super.getLibEcosed()
+        return LEDemo()
+    }
 
+    override fun getExtension(): EcosedExtension {
+        super.getExtension()
+        return FWDemo()
+    }
 
+    override fun getPluginList(): ArrayList<EcosedPlugin> {
+        return arrayListOf(ExamplePlugin(), ToastPlugin())
+    }
 
+    override fun getProductLogo(): Drawable? {
+        super.getProductLogo()
+        return ContextCompat.getDrawable(this@MyClient, R.drawable.baseline_android_24)
+    }
 
-
-
-
-    override val getLibEcosed: LibEcosed
-        get() = LEDemo()
-
-    override val getExtension: EcosedExtension
-        get() = FWDemo()
-
-    override val getPluginList: ArrayList<EcosedPlugin>
-        get() = arrayListOf(ExamplePlugin(), ToastPlugin())
-
-    override val getMainFragment: Fragment
-        get() = MainFragment()
-
-    override val getProductLogo: Drawable?
-        get() = ContextCompat.getDrawable(this@MyClient, R.drawable.baseline_android_24)
-
-    override val isDebug: Boolean
-        get() = BuildConfig.DEBUG
+    override fun isDebug(): Boolean {
+        return BuildConfig.DEBUG
+    }
 
 }

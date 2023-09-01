@@ -2,11 +2,8 @@ package io.ecosed.plugin
 
 import android.app.Application
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import org.json.JSONObject
-
 
 /**
  * 作者: wyq0918dev
@@ -17,9 +14,10 @@ import org.json.JSONObject
  */
 class PluginEngine {
 
-    /** 应用程序 */
+    /** 应用程序全局类 */
     private lateinit var mApp: Application
 
+    /** 基础上下文 */
     private lateinit var mBase: Context
 
     /** 客户端组件 */
@@ -45,89 +43,88 @@ class PluginEngine {
                 mBinding = PluginBinding(
                     context = mContext,
                     client = mClient,
-                    debug = mClient.isDebug,
-                    libEcosed = mClient.getLibEcosed,
-                    main = mClient.getMainFragment,
-                    logo = mClient.getProductLogo
+                    debug = mClient.isDebug(),
+                    libEcosed = mClient.getLibEcosed(),
+                    logo = mClient.getProductLogo()
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
                 // 加载框架扩展 (如果使用了的话).
-                mClient.getExtension?.let { extension ->
+                mClient.getExtension()?.let { extension ->
                     mBinding?.let { binding ->
                         extension.apply {
                             try {
                                 attache(base = mBase)
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "框架扩展已附加基本上下文")
                                 }
                                 onEcosedAdded(binding = binding)
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "框架扩展已加载")
                                 }
                             } catch (e: Exception) {
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.e(tag, "框架扩展加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = extension)
-                        if (mClient.isDebug) {
+                        if (mClient.isDebug()) {
                             Log.d(tag, "框架扩展已添加到插件列表")
                         }
                     }
                 }
                 // 加载LibEcosed框架 (如果使用了的话).
-                mClient.getLibEcosed?.let { ecosed ->
+                mClient.getLibEcosed()?.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
 
                             try {
                                 attach(base = mBase)
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已附加基本上下文")
                                 }
                                 init()
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已初始化")
                                 }
                                 synchronized(ecosed) {
                                     initSDKs(application = mApp)
                                     initSDKInitialized()
                                 }
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已初始化SDK")
                                 }
                                 onEcosedAdded(binding = binding)
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已加载")
                                 }
                             } catch (e: Exception) {
-                                if (mClient.isDebug) {
+                                if (mClient.isDebug()) {
                                     Log.e(tag, "LibEcosed框架加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = ecosed)
-                        if (mClient.isDebug) {
+                        if (mClient.isDebug()) {
                             Log.d(tag, "LibEcosed框架已添加到插件列表")
                         }
                     }
                 }
                 // 添加所有插件.
-                mClient.getPluginList?.let { plugins ->
+                mClient.getPluginList()?.let { plugins ->
                     mBinding?.let { binding ->
                         plugins.forEach { plugin ->
                             plugin.apply {
                                 try {
                                     onEcosedAdded(binding = binding)
-                                    if (mClient.isDebug) {
+                                    if (mClient.isDebug()) {
                                         Log.d(tag, "插件${plugin.javaClass.name}已加载")
                                     }
                                 } catch (e: Exception) {
-                                    if (mClient.isDebug) {
+                                    if (mClient.isDebug()) {
                                         Log.e(tag, "插件添加失败!", e)
                                     }
                                 }
@@ -136,7 +133,7 @@ class PluginEngine {
                     }.run {
                         plugins.forEach { plugin ->
                             mPluginList?.add(element = plugin)
-                            if (mClient.isDebug) {
+                            if (mClient.isDebug()) {
                                 Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
                             }
                         }
@@ -144,7 +141,7 @@ class PluginEngine {
                 }
             }
 
-            else -> if (mClient.isDebug) {
+            else -> if (mClient.isDebug()) {
                 Log.e(tag, "请勿重复执行attach!")
             }
         }
@@ -242,6 +239,7 @@ class PluginEngine {
      * 调用插件代码的方法.
      * @param name 要调用的插件的通道.
      * @param method 要调用的插件中的方法.
+     * @param objects 通过json传递参数.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
     internal fun execMethodCall(
@@ -260,7 +258,7 @@ class PluginEngine {
                                 method = method,
                                 objects = objects
                             )
-                            if (mClient.isDebug) {
+                            if (mClient.isDebug()) {
                                 Log.d(
                                     tag,
                                     "插件代码调用成功!\n" +
@@ -274,7 +272,7 @@ class PluginEngine {
                 }
             }
         } catch (e: Exception) {
-            if (mClient.isDebug) {
+            if (mClient.isDebug()) {
                 Log.e(tag, "插件代码调用失败!", e)
             }
         }
@@ -289,13 +287,9 @@ class PluginEngine {
         /**
          * 引擎构建函数.
          * @param application 传入Application.
-         * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
          */
-        fun build(
-            application: Application,
-            isUseHiddenApi: Boolean? = false
-        ): PluginEngine
+        fun create(application: Application): PluginEngine
     }
 
     companion object : Builder {
@@ -306,21 +300,18 @@ class PluginEngine {
         /**
          * 引擎构建函数.
          * @param application 传入Application.
-         * @param isUseHiddenApi 是否使用隐藏API - LibEcosed框架专用接口.
          * @return 返回已构建的引擎.
          */
-        override fun build(
-            application: Application,
-            isUseHiddenApi: Boolean?
-        ): PluginEngine = PluginEngine().let {
-            return@let it.apply {
+        override fun create(
+            application: Application
+        ): PluginEngine = PluginEngine().let { engine ->
+            return@let engine.apply {
                 if (application is EcosedApplication) {
                     application.apply {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
                         mClient = getEcosedClient()
-
                     }.run {
                         attach()
                     }

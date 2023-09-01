@@ -2,7 +2,6 @@ package io.ecosed.plugin
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.fragment.app.Fragment
 
 /**
  * 作者: wyq0918dev
@@ -16,21 +15,20 @@ class PluginBinding constructor(
     client: EcosedClient,
     debug: Boolean,
     libEcosed: LibEcosed?,
-    main: Fragment?,
     logo: Drawable?
 ) {
 
     /** 应用程序全局上下文. */
     private val mContext: Context? = context
 
+    /** 客户端组件. */
+    private val mClient: EcosedClient = client
+
     /** 是否调试模式. */
     private val mDebug: Boolean = debug
 
     /** LibEcosed. */
     private val mLibEcosed: LibEcosed? = libEcosed
-
-    /** 应用入口片段. */
-    private val mMain: Fragment? = main
 
     /** 产品图标. */
     private val mLogo: Drawable? = logo
@@ -52,13 +50,13 @@ class PluginBinding constructor(
     }
 
     /**
-     * 应用入口主片段 - LibEcosed框架专用接口.
+     * 获取客户端组件 - LibEcosed框架专用接口.
      * @param ecosed 用于判断是否是LibEcosed.
-     * @return Fragment?.
+     * @return EcosedClient?.
      */
-    internal fun getMainFragment(ecosed: LibEcosed): Fragment? {
+    internal fun getClient(ecosed: LibEcosed): EcosedClient? {
         return when (ecosed.javaClass) {
-            mLibEcosed?.javaClass -> mMain
+            mLibEcosed?.javaClass -> mClient
             else -> null
         }
     }

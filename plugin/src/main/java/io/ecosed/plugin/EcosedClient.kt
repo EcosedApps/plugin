@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
@@ -21,32 +20,65 @@ import androidx.lifecycle.LifecycleOwner
  */
 abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
 
+    /** 布局ID */
+    @LayoutRes
+    private var mContentLayoutId = 0
+
+    /**
+     * 附加基本上下文.
+     */
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
     }
 
+    /** 获取是否调试模式. */
+    abstract fun isDebug(): Boolean
+
+    /**
+     * 获取LibEcosed框架 - LibEcosed框架专用接口.
+     */
+    open fun getLibEcosed(): LibEcosed? {
+        return null
+    }
+
+    /**
+     * 产品图标 - LibEcosed框架专用接口.
+     */
+    open fun getProductLogo(): Drawable? {
+        return null
+    }
+
+    /** 获取插件列表. */
+    abstract fun getPluginList(): ArrayList<EcosedPlugin>?
+
+    /**
+     * 获取框架扩展.
+     */
+    open fun getExtension(): EcosedExtension? {
+        return null
+    }
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
 
     }
 
-    @LayoutRes
-    private var mContentLayoutId = 0
-
     open fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return if (mContentLayoutId != 0) {
-            inflater.inflate(mContentLayoutId, container, false)
-        } else null
+        return when (mContentLayoutId){
+            0 -> null
+            else -> inflater.inflate(
+                mContentLayoutId,
+                container,
+                false
+            )
+        }
     }
 
-    protected fun setContentView(@LayoutRes layoutResID: Int) {
-        mContentLayoutId = layoutResID
-    }
+
 
     open fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -68,30 +100,17 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
         super.onDestroy(owner)
     }
 
-    /** 获取框架扩展. */
-    open val getExtension: EcosedExtension?
-        get() = null
+    /**
+     * 设置布局ID
+     */
+    protected fun setContentView(@LayoutRes layoutResID: Int) {
+        mContentLayoutId = layoutResID
+    }
 
-    /** 获取LibEcosed框架 - LibEcosed框架专用接口. */
-    open val getLibEcosed: LibEcosed?
-        get() = null
-
-    /** 获取插件列表. */
-    abstract val getPluginList: ArrayList<EcosedPlugin>?
-
-    /** 应用入口主片段 - LibEcosed框架专用接口. */
-    open val getMainFragment: Fragment?
-        get() = null
-
-    /** 产品图标 - LibEcosed框架专用接口. */
-    open val getProductLogo: Drawable?
-        get() = null
-
-    /** 获取是否调试模式. */
-    abstract val isDebug: Boolean
-
-    /** 初始化 */
+    /** 内部API - 客户端组件初始化. */
     internal fun attach(base: Context) {
-        attachBaseContext(base)
+        this@EcosedClient.attachBaseContext(
+            base = base
+        )
     }
 }

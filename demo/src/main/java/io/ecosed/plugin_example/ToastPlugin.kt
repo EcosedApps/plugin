@@ -22,12 +22,12 @@ class ToastPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
         pluginChannel.setMethodCallHandler(handler = this@ToastPlugin)
     }
 
-    /**
-     * 插件被移除时执行
-     */
-    override fun onEcosedRemoved(binding: PluginBinding) {
-        pluginChannel.setMethodCallHandler(handler = null)
-    }
+//    /**
+//     * 插件被移除时执行
+//     */
+//    override fun onEcosedRemoved(binding: PluginBinding) {
+//        pluginChannel.setMethodCallHandler(handler = null)
+//    }
 
     /**
      * 执行代码时调用

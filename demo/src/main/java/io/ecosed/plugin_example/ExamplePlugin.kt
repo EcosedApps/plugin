@@ -20,18 +20,11 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
     }
 
     /**
-     * 插件被移除时执行
-     */
-    override fun onEcosedRemoved(binding: PluginBinding) {
-        pluginChannel.setMethodCallHandler(handler = null)
-    }
-
-    /**
      * 执行代码时调用
      */
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            "getText" -> result.success("Hello World")
+            "getText" -> result.success(call.objects?.getString("text"))
             else -> result.notImplemented()
         }
     }

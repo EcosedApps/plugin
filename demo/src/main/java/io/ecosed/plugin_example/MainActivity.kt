@@ -1,13 +1,13 @@
 package io.ecosed.plugin_example
 
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import io.ecosed.plugin.EcosedClient
 import io.ecosed.plugin.PluginExecutor
 import io.ecosed.plugin_example.databinding.ActivityMainBinding
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,36 +19,48 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val obj = JSONObject()
+        obj.put("text", "Hello From JSON")
+
+
+
         // 执行代码
         binding.textHello.text = PluginExecutor.execMethodCall(
             activity = this@MainActivity,
             name = ExamplePlugin.channel,
-            method = "getText", null
+            method = "getText",
+            objects = obj
         ).toString()
 
         binding.buttonToast.setOnClickListener {
             PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = ToastPlugin.channel,
-                method = "toast", null
+                method = "toast",
+                objects = null
             )
         }
 
-        Intent(this, MainActivity().javaClass)
-
-        binding.buttonLaunch.setOnClickListener {
-            Toast.makeText(this, (PluginExecutor.execMethodCall(
-                activity = this@MainActivity,
-                name = LEDemo.channel,
-                method = "main", null
-            ) as Fragment).javaClass.name, Toast.LENGTH_SHORT).show()
-
+        binding.buttonClient.setOnClickListener {
+            Toast.makeText(
+                this,
+                (PluginExecutor.execMethodCall(
+                    activity = this@MainActivity,
+                    name = LEDemo.channel,
+                    method = "client",
+                    objects = null
+                ) as EcosedClient).javaClass.name,
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        binding.logo.setImageDrawable(PluginExecutor.execMethodCall(
-            activity = this@MainActivity,
-            name = LEDemo.channel,
-            method = "logo", null
-        ) as Drawable)
+        binding.logo.setImageDrawable(
+            PluginExecutor.execMethodCall(
+                activity = this@MainActivity,
+                name = LEDemo.channel,
+                method = "logo",
+                objects = null
+            ) as Drawable
+        )
     }
 }

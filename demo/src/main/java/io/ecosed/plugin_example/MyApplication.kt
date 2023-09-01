@@ -11,10 +11,7 @@ class MyApplication : Application(), EcosedApplication {
 
     override fun onCreate() {
         super.onCreate()
-        engine = PluginEngine.build(
-            application = this@MyApplication,
-            isUseHiddenApi = true
-        )
+        engine = PluginEngine.create(application = this@MyApplication)
     }
 
     override fun getPluginEngine(): PluginEngine {

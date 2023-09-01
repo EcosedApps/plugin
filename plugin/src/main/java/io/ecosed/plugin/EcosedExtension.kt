@@ -15,10 +15,11 @@ abstract class EcosedExtension : ContextWrapper(null), EcosedPlugin,
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-
     }
 
     internal fun attache(base: Context?) {
-        attachBaseContext(base)
+        this@EcosedExtension.attachBaseContext(
+            base = base
+        )
     }
 }

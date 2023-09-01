@@ -2,7 +2,6 @@ package io.ecosed.plugin
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.fragment.app.Fragment
 import org.json.JSONObject
 
 /**
@@ -36,7 +35,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * 设置方法调用.
      * @param handler 执行方法时调用EcosedMethodCallHandler.
      */
-    fun setMethodCallHandler(handler: MethodCallHandler?) {
+    fun setMethodCallHandler(handler: MethodCallHandler) {
         mHandler = handler
     }
 
@@ -57,12 +56,12 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /**
-     * 获取应用入口主片段 - LibEcosed框架专用接口.
+     * 获取客户端组件 - LibEcosed框架专用接口.
      * @param ecosed 用于判断是否是LibEcosed.
-     * @return Fragment?.
+     * @return EcosedClient?.
      */
-    fun getMainFragment(ecosed: LibEcosed): Fragment? {
-        return mBinding.getMainFragment(ecosed = ecosed)
+    fun getClient(ecosed: LibEcosed): EcosedClient? {
+        return mBinding.getClient(ecosed = ecosed)
     }
 
     /**
@@ -108,6 +107,9 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         override val method: String?
             get() = mMethod
 
+        /**
+         * 要传入的参数.
+         */
         override val objects: JSONObject?
             get() = mObjects
     }
@@ -153,6 +155,9 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          */
         val method: String?
 
+        /**
+         * 要传入的参数.
+         */
         val objects: JSONObject?
     }
 
