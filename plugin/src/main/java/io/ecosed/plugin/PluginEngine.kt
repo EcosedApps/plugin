@@ -8,28 +8,28 @@ import org.json.JSONObject
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/08/22
+ * 时间: 2023/09/02
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 class PluginEngine {
 
-    /** 应用程序全局类 */
+    /** 应用程序全局类. */
     private lateinit var mApp: Application
 
-    /** 基础上下文 */
+    /** 基础上下文. */
     private lateinit var mBase: Context
 
-    /** 客户端组件 */
+    /** 客户端组件. */
     private lateinit var mClient: EcosedClient
 
-    /** 应用程序全局上下文, 非UI上下文 */
+    /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
 
-    /** 插件绑定器 */
+    /** 插件绑定器. */
     private var mBinding: PluginBinding? = null
 
-    /** 插件列表 */
+    /** 插件列表. */
     private var mPluginList: ArrayList<EcosedPlugin>? = null
 
     /**
@@ -38,7 +38,8 @@ class PluginEngine {
     private fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
-                mClient.attach(base = mBase)
+                // 客户端组件第一次初始化, 附加基本上下文.
+                mClient.firstAttach(base = mBase)
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
@@ -79,7 +80,6 @@ class PluginEngine {
                 mClient.getLibEcosed()?.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
-
                             try {
                                 attach(base = mBase)
                                 if (mClient.isDebug()) {
@@ -146,94 +146,6 @@ class PluginEngine {
             }
         }
     }
-
-//    /**
-//     * 将引擎与应用分离.
-//     */
-//    fun detach() {
-//        when {
-//            (mPluginList != null) or (mBinding != null) -> apply {
-//                // 销毁框架扩展 (如果使用了的话).
-//                mClient.getExtension?.let { extension ->
-//                    mBinding?.let { binding ->
-//                        extension.apply {
-//                            try {
-//                                onEcosedRemoved(binding = binding)
-//                                if (mClient.isDebug) {
-//                                    Log.d(tag, "框架扩展已销毁")
-//                                }
-//                            } catch (e: Exception) {
-//                                if (mClient.isDebug) {
-//                                    Log.e(tag, "框架扩展销毁失败!", e)
-//                                }
-//                            }
-//                        }
-//                    }.run {
-//                        mPluginList?.remove(element = extension)
-//                        if (mClient.isDebug) {
-//                            Log.d(tag, "框架扩展已从插件列表移除")
-//                        }
-//                    }
-//                }
-//                // 销毁LibEcosed框架 (如果使用了的话).
-//                mClient.getLibEcosed?.let { ecosed ->
-//                    mBinding?.let { binding ->
-//                        ecosed.apply {
-//                            try {
-//                                onEcosedRemoved(binding = binding)
-//                                if (mClient.isDebug) {
-//                                    Log.d(tag, "LibEcosed框架已销毁")
-//                                }
-//                            } catch (e: Exception) {
-//                                if (mClient.isDebug) {
-//                                    Log.e(tag, "LibEcosed框架销毁失败!", e)
-//                                }
-//                            }
-//                        }
-//                    }.run {
-//                        mPluginList?.remove(element = ecosed)
-//                        if (mClient.isDebug) {
-//                            Log.d(tag, "LibEcosed框架已从插件列表移除")
-//                        }
-//                    }
-//                }
-//                // 移除所有插件.
-//                mClient.getPluginList?.let { plugins ->
-//                    mBinding?.let { binding ->
-//                        plugins.forEach { plugin ->
-//                            plugin.apply {
-//                                try {
-//                                    onEcosedRemoved(binding = binding)
-//                                    if (mClient.isDebug) {
-//                                        Log.d(tag, "插件${plugin.javaClass.name}已销毁")
-//                                    }
-//                                } catch (e: Exception) {
-//                                    if (mClient.isDebug) {
-//                                        Log.e(tag, "移除插件失败!", e)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }.run {
-//                        plugins.forEach { plugin ->
-//                            mPluginList?.remove(element = plugin)
-//                            if (mClient.isDebug) {
-//                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
-//                            }
-//                        }
-//                    }
-//                }
-//                // 销毁插件列表.
-//                mPluginList = null
-//                // 销毁插件绑定器.
-//                mBinding = null
-//            }
-//
-//            else -> if (mClient.isDebug) {
-//                Log.e(tag, "请勿重复执行detach!")
-//            }
-//        }
-//    }
 
     /**
      * 调用插件代码的方法.

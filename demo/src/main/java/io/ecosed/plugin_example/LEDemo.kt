@@ -51,14 +51,6 @@ class LEDemo : LibEcosed() {
         Log.i("LEDemo", "onEcosedAdded")
     }
 
-//    /**
-//     * 插件被移除时执行
-//     */
-//    override fun onEcosedRemoved(binding: PluginBinding) {
-//        pluginChannel.setMethodCallHandler(handler = null)
-//        Log.i("LEDemo", "onEcosedRemoved")
-//    }
-
     /**
      * 执行代码时调用
      */
@@ -69,8 +61,6 @@ class LEDemo : LibEcosed() {
             else -> result.notImplemented()
         }
     }
-
-
 
     /**
      * 返回pluginChannel

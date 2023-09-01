@@ -9,14 +9,14 @@ import org.json.JSONObject
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/08/21
+ * 时间: 2023/09/02
  * 描述: 插件方法执行器
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 class PluginExecutor {
 
     /**
-     * 执行器接口
+     * 执行器接口.
      */
     internal interface Executor {
 
@@ -75,6 +75,21 @@ class PluginExecutor {
          */
         fun execMethodCall(
             application: Application,
+            name: String,
+            method: String,
+            objects: JSONObject?
+        ): Any?
+
+        /**
+         * 调用插件代码的方法.
+         * @param client 传入EcosedClient.
+         * @param name 要调用的插件的通道.
+         * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
+         * @return 返回方法执行后的返回值,类型为Any?.
+         */
+        fun execMethodCall(
+            client: EcosedClient,
             name: String,
             method: String,
             objects: JSONObject?
@@ -197,6 +212,37 @@ class PluginExecutor {
         ): Any? = when (application) {
             is EcosedApplication -> {
                 (application as EcosedApplication).apply {
+                    getPluginEngine().apply {
+                        return execMethodCall(
+                            name = name,
+                            method = method,
+                            objects = objects
+                        )
+                    }
+                }
+            }
+
+            else -> error(
+                message = errorMessage
+            )
+        }
+
+        /**
+         * 调用插件代码的方法.
+         * @param client 传入EcosedClient.
+         * @param name 要调用的插件的通道.
+         * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
+         * @return 返回方法执行后的返回值,类型为Any?.
+         */
+        override fun execMethodCall(
+            client: EcosedClient,
+            name: String,
+            method: String,
+            objects: JSONObject?
+        ): Any? = when (client.getApplication()) {
+            is EcosedApplication -> {
+                (client.getApplication() as EcosedApplication).apply {
                     getPluginEngine().apply {
                         return execMethodCall(
                             name = name,

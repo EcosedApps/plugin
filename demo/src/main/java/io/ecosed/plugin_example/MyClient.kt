@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -15,25 +16,24 @@ import io.ecosed.plugin.LibEcosed
 
 class MyClient : EcosedClient() {
 
-
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         setContentView(R.layout.ecosed_client_main)
-        Toast.makeText(this, "onCreate执行成功！！！", Toast.LENGTH_SHORT).show()
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+
+        getActivity()
+        getApplication()
+        getFragment()
+        getFragmentManager()
+        getWindow()
+        getWindowManager()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val hello = findViewById<TextView>(R.id.textView)
+        hello?.text = "Hello World\nfindViewById in EcosedClient"
     }
-
 
     override fun getLibEcosed(): LibEcosed {
         super.getLibEcosed()

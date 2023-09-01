@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
         val obj = JSONObject()
         obj.put("text", "Hello From JSON")
 
-
-
         // 执行代码
         binding.textHello.text = PluginExecutor.execMethodCall(
             activity = this@MainActivity,

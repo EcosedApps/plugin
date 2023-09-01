@@ -20,6 +20,14 @@ class MainFragment : Fragment() {
             method = "client",
             objects = null
         ) as EcosedClient
+        mClient.secondAttach(
+            activity = requireActivity(),
+            application = requireActivity().application,
+            fragment = this@MainFragment,
+            fragmentManager = childFragmentManager,
+            window = requireActivity().window,
+            windowManager = requireActivity().windowManager
+        )
         lifecycle.addObserver(mClient)
     }
 
