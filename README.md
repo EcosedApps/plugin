@@ -13,6 +13,6 @@ dependencies { implementation("com.github.ecosed:plugin:[![](https://jitpack.io/
 
 3.点击Sync Now同步即可完成工程设定。
 
-4.创建插件，点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin/blob/master/app/src/main/java/io/ecosed/plugin_example/ExamplePlugin.kt)
+4.点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin)
 
-5.在Application全局类中初始化，点击查看[示例代码](https://github.dev/ecosed/EcosedPlugin/blob/master/app/src/main/java/io/ecosed/plugin_example/MyApplication.kt)
+注意：本库仅支持AndroidX.

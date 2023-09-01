@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
         binding.textHello.text = PluginExecutor.execMethodCall(
             activity = this@MainActivity,
             name = ExamplePlugin.channel,
-            method = "getText"
+            method = "getText", null
         ).toString()
 
         binding.buttonToast.setOnClickListener {
             PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = ToastPlugin.channel,
-                method = "toast"
+                method = "toast", null
             )
         }
 
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, (PluginExecutor.execMethodCall(
                 activity = this@MainActivity,
                 name = LEDemo.channel,
-                method = "main"
+                method = "main", null
             ) as Fragment).javaClass.name, Toast.LENGTH_SHORT).show()
 
         }
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding.logo.setImageDrawable(PluginExecutor.execMethodCall(
             activity = this@MainActivity,
             name = LEDemo.channel,
-            method = "logo"
+            method = "logo", null
         ) as Drawable)
     }
 }

@@ -2,9 +2,11 @@ package io.ecosed.plugin
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import org.lsposed.hiddenapibypass.HiddenApiBypass
+import org.json.JSONObject
+
 
 /**
  * 作者: wyq0918dev
@@ -18,8 +20,10 @@ class PluginEngine {
     /** 应用程序 */
     private lateinit var mApp: Application
 
-    /** 应用程序主机 */
-    private lateinit var mHost: EcosedHost
+    private lateinit var mBase: Context
+
+    /** 客户端组件 */
+    private lateinit var mClient: EcosedClient
 
     /** 应用程序全局上下文, 非UI上下文 */
     private lateinit var mContext: Context
@@ -33,79 +37,97 @@ class PluginEngine {
     /**
      * 将引擎附加到应用.
      */
-    fun attach() {
+    private fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
+                mClient.attach(base = mBase)
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
-                    isDebug = mHost.isDebug,
-                    libEcosed = mHost.getLibEcosed,
-                    main = mHost.getMainFragment,
-                    logo = mHost.getProductLogo
+                    client = mClient,
+                    debug = mClient.isDebug,
+                    libEcosed = mClient.getLibEcosed,
+                    main = mClient.getMainFragment,
+                    logo = mClient.getProductLogo
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
                 // 加载框架扩展 (如果使用了的话).
-                mHost.getExtension?.let { extension ->
+                mClient.getExtension?.let { extension ->
                     mBinding?.let { binding ->
                         extension.apply {
                             try {
+                                attache(base = mBase)
+                                if (mClient.isDebug) {
+                                    Log.d(tag, "框架扩展已附加基本上下文")
+                                }
                                 onEcosedAdded(binding = binding)
-                                if (mHost.isDebug) {
+                                if (mClient.isDebug) {
                                     Log.d(tag, "框架扩展已加载")
                                 }
                             } catch (e: Exception) {
-                                if (mHost.isDebug) {
+                                if (mClient.isDebug) {
                                     Log.e(tag, "框架扩展加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = extension)
-                        if (mHost.isDebug) {
+                        if (mClient.isDebug) {
                             Log.d(tag, "框架扩展已添加到插件列表")
                         }
                     }
                 }
                 // 加载LibEcosed框架 (如果使用了的话).
-                mHost.getLibEcosed?.let { ecosed ->
+                mClient.getLibEcosed?.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
+
                             try {
-                                onEcosedAdded(binding = binding)
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "LibEcosed框架已加载")
+                                attach(base = mBase)
+                                if (mClient.isDebug) {
+                                    Log.d(tag, "LibEcosed框架已附加基本上下文")
                                 }
-                                initSDK(application = mApp)
-                                if (mHost.isDebug) {
+                                init()
+                                if (mClient.isDebug) {
+                                    Log.d(tag, "LibEcosed框架已初始化")
+                                }
+                                synchronized(ecosed) {
+                                    initSDKs(application = mApp)
+                                    initSDKInitialized()
+                                }
+                                if (mClient.isDebug) {
                                     Log.d(tag, "LibEcosed框架已初始化SDK")
                                 }
+                                onEcosedAdded(binding = binding)
+                                if (mClient.isDebug) {
+                                    Log.d(tag, "LibEcosed框架已加载")
+                                }
                             } catch (e: Exception) {
-                                if (mHost.isDebug) {
+                                if (mClient.isDebug) {
                                     Log.e(tag, "LibEcosed框架加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = ecosed)
-                        if (mHost.isDebug) {
+                        if (mClient.isDebug) {
                             Log.d(tag, "LibEcosed框架已添加到插件列表")
                         }
                     }
                 }
                 // 添加所有插件.
-                mHost.getPluginList?.let { plugins ->
+                mClient.getPluginList?.let { plugins ->
                     mBinding?.let { binding ->
                         plugins.forEach { plugin ->
                             plugin.apply {
                                 try {
                                     onEcosedAdded(binding = binding)
-                                    if (mHost.isDebug) {
+                                    if (mClient.isDebug) {
                                         Log.d(tag, "插件${plugin.javaClass.name}已加载")
                                     }
                                 } catch (e: Exception) {
-                                    if (mHost.isDebug) {
+                                    if (mClient.isDebug) {
                                         Log.e(tag, "插件添加失败!", e)
                                     }
                                 }
@@ -114,7 +136,7 @@ class PluginEngine {
                     }.run {
                         plugins.forEach { plugin ->
                             mPluginList?.add(element = plugin)
-                            if (mHost.isDebug) {
+                            if (mClient.isDebug) {
                                 Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
                             }
                         }
@@ -122,99 +144,99 @@ class PluginEngine {
                 }
             }
 
-            else -> if (mHost.isDebug) {
+            else -> if (mClient.isDebug) {
                 Log.e(tag, "请勿重复执行attach!")
             }
         }
     }
 
-    /**
-     * 将引擎与应用分离.
-     */
-    fun detach() {
-        when {
-            (mPluginList != null) or (mBinding != null) -> apply {
-                // 移除所有插件.
-                mHost.getPluginList?.let { plugins ->
-                    mBinding?.let { binding ->
-                        plugins.forEach { plugin ->
-                            plugin.apply {
-                                try {
-                                    onEcosedRemoved(binding = binding)
-                                    if (mHost.isDebug) {
-                                        Log.d(tag, "插件${plugin.javaClass.name}已销毁")
-                                    }
-                                } catch (e: Exception) {
-                                    if (mHost.isDebug) {
-                                        Log.e(tag, "移除插件失败!", e)
-                                    }
-                                }
-                            }
-                        }
-                    }.run {
-                        plugins.forEach { plugin ->
-                            mPluginList?.remove(element = plugin)
-                            if (mHost.isDebug) {
-                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
-                            }
-                        }
-                    }
-                }
-                // 销毁LibEcosed框架 (如果使用了的话).
-                mHost.getLibEcosed?.let { ecosed ->
-                    mBinding?.let { binding ->
-                        ecosed.apply {
-                            try {
-                                onEcosedRemoved(binding = binding)
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "LibEcosed框架已销毁")
-                                }
-                            } catch (e: Exception) {
-                                if (mHost.isDebug) {
-                                    Log.e(tag, "LibEcosed框架销毁失败!", e)
-                                }
-                            }
-                        }
-                    }.run {
-                        mPluginList?.remove(element = ecosed)
-                        if (mHost.isDebug) {
-                            Log.d(tag, "LibEcosed框架已从插件列表移除")
-                        }
-                    }
-                }
-                // 销毁框架扩展 (如果使用了的话).
-                mHost.getExtension?.let { extension ->
-                    mBinding?.let { binding ->
-                        extension.apply {
-                            try {
-                                onEcosedRemoved(binding = binding)
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "框架扩展已销毁")
-                                }
-                            } catch (e: Exception) {
-                                if (mHost.isDebug) {
-                                    Log.e(tag, "框架扩展销毁失败!", e)
-                                }
-                            }
-                        }
-                    }.run {
-                        mPluginList?.remove(element = extension)
-                        if (mHost.isDebug) {
-                            Log.d(tag, "框架扩展已从插件列表移除")
-                        }
-                    }
-                }
-                // 销毁插件列表.
-                mPluginList = null
-                // 销毁插件绑定器.
-                mBinding = null
-            }
-
-            else -> if (mHost.isDebug) {
-                Log.e(tag, "请勿重复执行detach!")
-            }
-        }
-    }
+//    /**
+//     * 将引擎与应用分离.
+//     */
+//    fun detach() {
+//        when {
+//            (mPluginList != null) or (mBinding != null) -> apply {
+//                // 销毁框架扩展 (如果使用了的话).
+//                mClient.getExtension?.let { extension ->
+//                    mBinding?.let { binding ->
+//                        extension.apply {
+//                            try {
+//                                onEcosedRemoved(binding = binding)
+//                                if (mClient.isDebug) {
+//                                    Log.d(tag, "框架扩展已销毁")
+//                                }
+//                            } catch (e: Exception) {
+//                                if (mClient.isDebug) {
+//                                    Log.e(tag, "框架扩展销毁失败!", e)
+//                                }
+//                            }
+//                        }
+//                    }.run {
+//                        mPluginList?.remove(element = extension)
+//                        if (mClient.isDebug) {
+//                            Log.d(tag, "框架扩展已从插件列表移除")
+//                        }
+//                    }
+//                }
+//                // 销毁LibEcosed框架 (如果使用了的话).
+//                mClient.getLibEcosed?.let { ecosed ->
+//                    mBinding?.let { binding ->
+//                        ecosed.apply {
+//                            try {
+//                                onEcosedRemoved(binding = binding)
+//                                if (mClient.isDebug) {
+//                                    Log.d(tag, "LibEcosed框架已销毁")
+//                                }
+//                            } catch (e: Exception) {
+//                                if (mClient.isDebug) {
+//                                    Log.e(tag, "LibEcosed框架销毁失败!", e)
+//                                }
+//                            }
+//                        }
+//                    }.run {
+//                        mPluginList?.remove(element = ecosed)
+//                        if (mClient.isDebug) {
+//                            Log.d(tag, "LibEcosed框架已从插件列表移除")
+//                        }
+//                    }
+//                }
+//                // 移除所有插件.
+//                mClient.getPluginList?.let { plugins ->
+//                    mBinding?.let { binding ->
+//                        plugins.forEach { plugin ->
+//                            plugin.apply {
+//                                try {
+//                                    onEcosedRemoved(binding = binding)
+//                                    if (mClient.isDebug) {
+//                                        Log.d(tag, "插件${plugin.javaClass.name}已销毁")
+//                                    }
+//                                } catch (e: Exception) {
+//                                    if (mClient.isDebug) {
+//                                        Log.e(tag, "移除插件失败!", e)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }.run {
+//                        plugins.forEach { plugin ->
+//                            mPluginList?.remove(element = plugin)
+//                            if (mClient.isDebug) {
+//                                Log.d(tag, "插件${plugin.javaClass.name}已从插件列表移除")
+//                            }
+//                        }
+//                    }
+//                }
+//                // 销毁插件列表.
+//                mPluginList = null
+//                // 销毁插件绑定器.
+//                mBinding = null
+//            }
+//
+//            else -> if (mClient.isDebug) {
+//                Log.e(tag, "请勿重复执行detach!")
+//            }
+//        }
+//    }
 
     /**
      * 调用插件代码的方法.
@@ -222,7 +244,11 @@ class PluginEngine {
      * @param method 要调用的插件中的方法.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
-    internal fun execMethodCall(name: String, method: String): Any? {
+    internal fun execMethodCall(
+        name: String,
+        method: String,
+        objects: JSONObject?
+    ): Any? {
         var result: Any? = null
         try {
             mPluginList?.forEach { plugin ->
@@ -230,9 +256,11 @@ class PluginEngine {
                     when (channel.getChannel()) {
                         name -> {
                             result = channel.execMethodCall(
-                                name = name, method = method
+                                name = name,
+                                method = method,
+                                objects = objects
                             )
-                            if (mHost.isDebug) {
+                            if (mClient.isDebug) {
                                 Log.d(
                                     tag,
                                     "插件代码调用成功!\n" +
@@ -246,7 +274,7 @@ class PluginEngine {
                 }
             }
         } catch (e: Exception) {
-            if (mHost.isDebug) {
+            if (mClient.isDebug) {
                 Log.e(tag, "插件代码调用失败!", e)
             }
         }
@@ -289,20 +317,12 @@ class PluginEngine {
                 if (application is EcosedApplication) {
                     application.apply {
                         mApp = application
+                        mBase = baseContext
                         mContext = applicationContext
-                        mHost = getEngineHost
-                        when (isUseHiddenApi) {
-                            true -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                HiddenApiBypass.addHiddenApiExemptions("L")
-                                if (mHost.isDebug) Log.d(tag, "已启用非SDK接口限制绕过")
-                            } else {
-                                if (mHost.isDebug) {
-                                    Log.d(tag, "Android版本小于9无需使用非SDK接口限制绕过")
-                                }
-                            }
+                        mClient = getEcosedClient()
 
-                            else -> if (mHost.isDebug) Log.d(tag, "非SDK接口限制绕过未启用")
-                        }
+                    }.run {
+                        attach()
                     }
                 } else error(
                     message = "错误:EcosedApplication接口未实现.\n" +

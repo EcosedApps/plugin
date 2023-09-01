@@ -13,7 +13,8 @@ import androidx.fragment.app.Fragment
  */
 class PluginBinding constructor(
     context: Context?,
-    isDebug: Boolean,
+    client: EcosedClient,
+    debug: Boolean,
     libEcosed: LibEcosed?,
     main: Fragment?,
     logo: Drawable?
@@ -23,7 +24,7 @@ class PluginBinding constructor(
     private val mContext: Context? = context
 
     /** 是否调试模式. */
-    private val mDebug: Boolean = isDebug
+    private val mDebug: Boolean = debug
 
     /** LibEcosed. */
     private val mLibEcosed: LibEcosed? = libEcosed

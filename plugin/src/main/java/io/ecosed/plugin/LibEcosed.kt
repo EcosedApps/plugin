@@ -1,6 +1,8 @@
 package io.ecosed.plugin
 
 import android.app.Application
+import android.content.Context
+import android.content.ContextWrapper
 
 /**
  * 作者: wyq0918dev
@@ -9,8 +11,20 @@ import android.app.Application
  * 描述: LibEcosed框架接口
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-interface LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
+abstract class LibEcosed : ContextWrapper(null), EcosedPlugin, PluginChannel.MethodCallHandler {
+
+    abstract fun init()
 
     /** 初始化SDK - LibEcosed框架专用接口. */
-    fun initSDK(application: Application) = Unit
+    open fun initSDKs(application: Application) = Unit
+
+    open fun initSDKInitialized() = Unit
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
+    internal fun attach(base: Context?) {
+        attachBaseContext(base)
+    }
 }

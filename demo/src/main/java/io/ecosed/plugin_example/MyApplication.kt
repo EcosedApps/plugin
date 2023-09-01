@@ -1,14 +1,8 @@
 package io.ecosed.plugin_example
 
 import android.app.Application
-import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import io.ecosed.plugin.EcosedApplication
-import io.ecosed.plugin.EcosedExtension
-import io.ecosed.plugin.EcosedHost
-import io.ecosed.plugin.EcosedPlugin
-import io.ecosed.plugin.LibEcosed
+import io.ecosed.plugin.EcosedClient
 import io.ecosed.plugin.PluginEngine
 
 class MyApplication : Application(), EcosedApplication {
@@ -21,39 +15,13 @@ class MyApplication : Application(), EcosedApplication {
             application = this@MyApplication,
             isUseHiddenApi = true
         )
-        engine.attach()
     }
 
-    override fun onTerminate() {
-        super.onTerminate()
-        engine.detach()
+    override fun getPluginEngine(): PluginEngine {
+        return engine
     }
 
-    override val getEngineHost: EcosedHost
-        get() = object : EcosedHost {
-
-            override val getPluginEngine: PluginEngine
-                get() = engine
-
-            override val getLibEcosed: LibEcosed
-                get() = LEDemo()
-
-            override val getExtension: EcosedExtension
-                get() = FWDemo()
-
-            override val getPluginList: ArrayList<EcosedPlugin>
-                get() = arrayListOf(ExamplePlugin(), ToastPlugin())
-
-            override val getMainFragment: Fragment
-                get() = MainFragment()
-
-            override val getProductLogo: Drawable?
-                get() = ContextCompat.getDrawable(
-                    this@MyApplication,
-                    R.drawable.baseline_android_24
-                )
-
-            override val isDebug: Boolean
-                get() = BuildConfig.DEBUG
-        }
+    override fun getEcosedClient(): EcosedClient {
+        return MyClient()
+    }
 }

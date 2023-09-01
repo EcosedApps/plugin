@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import androidx.fragment.app.Fragment
+import org.json.JSONObject
 
 /**
  * 作者: wyq0918dev
@@ -24,12 +25,14 @@ class PluginExecutor {
          * @param activity 传入Activity.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
             activity: Activity,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any?
 
         /**
@@ -37,12 +40,14 @@ class PluginExecutor {
          * @param fragment 传入Fragment.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
             fragment: Fragment,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any?
 
         /**
@@ -50,12 +55,14 @@ class PluginExecutor {
          * @param service 传入Service.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
             service: Service,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any?
 
         /**
@@ -63,12 +70,14 @@ class PluginExecutor {
          * @param application 传入Application.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         fun execMethodCall(
             application: Application,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any?
     }
 
@@ -84,17 +93,23 @@ class PluginExecutor {
          * @param activity 传入Activity.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
             activity: Activity,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any? = when (activity.application) {
             is EcosedApplication -> {
                 (activity.application as EcosedApplication).apply {
-                    getEngineHost.getPluginEngine.apply {
-                        return execMethodCall(name, method)
+                    getPluginEngine().apply {
+                        return execMethodCall(
+                            name = name,
+                            method = method,
+                            objects = objects
+                        )
                     }
                 }
             }
@@ -109,17 +124,23 @@ class PluginExecutor {
          * @param fragment 传入Fragment.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
             fragment: Fragment,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any? = when (fragment.requireActivity().application) {
             is EcosedApplication -> {
                 (fragment.requireActivity().application as EcosedApplication).apply {
-                    getEngineHost.getPluginEngine.apply {
-                        return execMethodCall(name, method)
+                    getPluginEngine().apply {
+                        return execMethodCall(
+                            name = name,
+                            method = method,
+                            objects = objects
+                        )
                     }
                 }
             }
@@ -134,17 +155,23 @@ class PluginExecutor {
          * @param service 传入Service.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
             service: Service,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any? = when (service.application) {
             is EcosedApplication -> {
                 (service.application as EcosedApplication).apply {
-                    getEngineHost.getPluginEngine.apply {
-                        return execMethodCall(name, method)
+                    getPluginEngine().apply {
+                        return execMethodCall(
+                            name = name,
+                            method = method,
+                            objects = objects
+                        )
                     }
                 }
             }
@@ -159,17 +186,23 @@ class PluginExecutor {
          * @param application 传入Application.
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
+         * @param objects 通过json传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
         override fun execMethodCall(
             application: Application,
             name: String,
-            method: String
+            method: String,
+            objects: JSONObject?
         ): Any? = when (application) {
             is EcosedApplication -> {
                 (application as EcosedApplication).apply {
-                    getEngineHost.getPluginEngine.apply {
-                        return execMethodCall(name, method)
+                    getPluginEngine().apply {
+                        return execMethodCall(
+                            name = name,
+                            method = method,
+                            objects = objects
+                        )
                     }
                 }
             }

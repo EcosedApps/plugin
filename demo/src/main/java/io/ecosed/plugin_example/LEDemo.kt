@@ -11,13 +11,27 @@ import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
-class LEDemo : LibEcosed {
+class LEDemo : LibEcosed() {
 
     private lateinit var pluginChannel: PluginChannel
 
     private lateinit var mMain: Fragment
     private lateinit var mLogo: Drawable
     private lateinit var mContext: Context
+
+    override fun init() {
+        Log.d("LibEcosed", "init()")
+    }
+
+    override fun initSDKs(application: Application) {
+        super.initSDKs(application)
+        Log.d("LibEcosed", "initSDKs()")
+    }
+
+    override fun initSDKInitialized() {
+        super.initSDKInitialized()
+        Log.d("LibEcosed", "initSDKInitialized()")
+    }
 
     /**
      * 插件被添加时执行
@@ -58,9 +72,7 @@ class LEDemo : LibEcosed {
         }
     }
 
-    override fun initSDK(application: Application) {
-        super.initSDK(application)
-    }
+
 
     /**
      * 返回pluginChannel

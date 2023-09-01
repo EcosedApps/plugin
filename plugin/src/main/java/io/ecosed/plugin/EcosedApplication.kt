@@ -9,6 +9,9 @@ package io.ecosed.plugin
  */
 interface EcosedApplication {
 
+    /** 获取插件引擎. */
+    fun getPluginEngine(): PluginEngine
+
     /** 获取应用程序主机 */
-    val getEngineHost: EcosedHost
+    fun getEcosedClient(): EcosedClient
 }
