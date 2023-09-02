@@ -2,7 +2,7 @@ package io.ecosed.plugin
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import org.json.JSONObject
+import android.os.Bundle
 
 /**
  * 作者: wyq0918dev
@@ -25,8 +25,8 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     /** 方法名. */
     private var mMethod: String? = null
 
-    /** 参数JSON. */
-    private var mObjects: JSONObject? = null
+    /** 参数Bundle. */
+    private var mBundle: Bundle? = null
 
     /** 返回结果. */
     private var mResult: Any? = null
@@ -87,9 +87,9 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * @param method 方法名称.
      * @return 方法执行后的返回值.
      */
-    internal fun execMethodCall(name: String, method: String?, objects: JSONObject?): Any? {
+    internal fun execMethodCall(name: String, method: String?, bundle: Bundle?): Any? {
         mMethod = method
-        mObjects = objects
+        mBundle = bundle
         if (name == mChannel) {
             mHandler?.onEcosedMethodCall(
                 call = call, result = result
@@ -110,8 +110,8 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         /**
          * 要传入的参数.
          */
-        override val objects: JSONObject?
-            get() = mObjects
+        override val bundle: Bundle?
+            get() = mBundle
     }
 
     /** 方法调用结果回调. */
@@ -158,7 +158,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         /**
          * 要传入的参数.
          */
-        val objects: JSONObject?
+        val bundle: Bundle?
     }
 
     /**

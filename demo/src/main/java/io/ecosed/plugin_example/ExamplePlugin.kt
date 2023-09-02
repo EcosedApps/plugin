@@ -24,7 +24,7 @@ class ExamplePlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
      */
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            "getText" -> result.success(call.objects?.getString("text"))
+            "getText" -> result.success(call.bundle?.getString("text"))
             else -> result.notImplemented()
         }
     }

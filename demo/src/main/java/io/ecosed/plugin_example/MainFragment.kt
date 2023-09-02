@@ -18,7 +18,7 @@ class MainFragment : Fragment() {
             fragment = this@MainFragment,
             name = LEDemo.channel,
             method = "client",
-            objects = null
+            bundle = null
         ) as EcosedClient
         mClient.secondAttach(
             activity = requireActivity(),

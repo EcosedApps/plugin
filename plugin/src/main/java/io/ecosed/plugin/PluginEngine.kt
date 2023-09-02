@@ -2,8 +2,8 @@ package io.ecosed.plugin
 
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
-import org.json.JSONObject
 
 /**
  * 作者: wyq0918dev
@@ -151,13 +151,13 @@ class PluginEngine {
      * 调用插件代码的方法.
      * @param name 要调用的插件的通道.
      * @param method 要调用的插件中的方法.
-     * @param objects 通过json传递参数.
+     * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
     internal fun execMethodCall(
         name: String,
         method: String,
-        objects: JSONObject?
+        bundle: Bundle?
     ): Any? {
         var result: Any? = null
         try {
@@ -168,7 +168,7 @@ class PluginEngine {
                             result = channel.execMethodCall(
                                 name = name,
                                 method = method,
-                                objects = objects
+                                bundle = bundle
                             )
                             if (mClient.isDebug()) {
                                 Log.d(
