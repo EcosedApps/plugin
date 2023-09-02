@@ -121,14 +121,6 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
     open fun onViewCreated(view: View, savedInstanceState: Bundle?) = Unit
 
     /**
-     * 设置布局ID - LibEcosed框架专用接口.
-     * @param layoutResID 布局id, 示例: R.layout.main.
-     */
-    open fun setContentView(@LayoutRes layoutResID: Int) {
-        mContentLayoutId = layoutResID
-    }
-
-    /**
      * 获取Application全局类 - LibEcosed框架专用接口.
      * @return Application.
      */
@@ -174,15 +166,6 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      */
     open fun getActivity(): FragmentActivity {
         return mActivity
-    }
-
-    /**
-     * 通过ID绑定View - LibEcosed框架专用接口.
-     * @param id 传入控件id, 示例: R.id.view.
-     * @return 返回View, 泛型.
-     */
-    open fun <T : View?> findViewById(@IdRes id: Int): T? {
-        return getWindow().findViewById(id)
     }
 
     /**
