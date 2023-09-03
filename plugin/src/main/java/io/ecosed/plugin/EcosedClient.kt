@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -25,10 +23,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
-
-    /** 布局ID. */
-    @LayoutRes
-    private var mContentLayoutId: Int = 0
 
     /** 宿主FragmentActivity. */
     private lateinit var mActivity: FragmentActivity
@@ -103,14 +97,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return when (mContentLayoutId) {
-            0 -> null
-            else -> inflater.inflate(
-                mContentLayoutId,
-                container,
-                false
-            )
-        }
+        return null
     }
 
     /**
