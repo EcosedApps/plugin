@@ -154,18 +154,18 @@ class PluginEngine {
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
-    internal fun execMethodCall(
+    internal fun <T: Any?> execMethodCall(
         name: String,
         method: String,
         bundle: Bundle?
-    ): Any? {
-        var result: Any? = null
+    ): T? {
+        var result: T? = null
         try {
             mPluginList?.forEach { plugin ->
                 plugin.getPluginChannel.let { channel ->
                     when (channel.getChannel()) {
                         name -> {
-                            result = channel.execMethodCall(
+                            result = channel.execMethodCall<T>(
                                 name = name,
                                 method = method,
                                 bundle = bundle

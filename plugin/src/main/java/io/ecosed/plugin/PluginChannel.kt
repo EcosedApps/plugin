@@ -87,7 +87,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * @param method 方法名称.
      * @return 方法执行后的返回值.
      */
-    internal fun execMethodCall(name: String, method: String?, bundle: Bundle?): Any? {
+    internal fun <T : Any?> execMethodCall(name: String, method: String?, bundle: Bundle?): T? {
         mMethod = method
         mBundle = bundle
         if (name == mChannel) {
@@ -95,7 +95,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
                 call = call, result = result
             )
         }
-        return mResult
+        return mResult as T
     }
 
     /** 用于调用方法的接口. */

@@ -28,12 +28,12 @@ class PluginExecutor {
          * @param bundle 通过Bundle传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
-        fun execMethodCall(
+        fun <T> execMethodCall(
             activity: Activity,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any?
+        ): T?
 
         /**
          * 调用插件代码的方法.
@@ -111,25 +111,21 @@ class PluginExecutor {
          * @param bundle 通过Bundle传递参数.
          * @return 返回方法执行后的返回值,类型为Any?.
          */
-        override fun execMethodCall(
+        override fun <T: Any?> execMethodCall(
             activity: Activity,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any? = when (activity.application) {
-            is EcosedApplication -> {
+        ): T? {
+            if (activity.application is EcosedApplication){
                 (activity.application as EcosedApplication).apply {
-                    getPluginEngine().apply {
-                        return execMethodCall(
-                            name = name,
-                            method = method,
-                            bundle = bundle
-                        )
-                    }
+                    return getPluginEngine().execMethodCall<T>(
+                        name = name,
+                        method = method,
+                        bundle = bundle
+                    )
                 }
-            }
-
-            else -> error(
+            } else error(
                 message = errorMessage
             )
         }
