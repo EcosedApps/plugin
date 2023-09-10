@@ -23,15 +23,15 @@ class MainActivity : AppCompatActivity() {
         bundle.putString("text", "Hello from bundle")
 
         // 执行代码
-        binding.textHello.text = PluginExecutor.execMethodCall(
+        binding.textHello.text = PluginExecutor.execMethodCall<String>(
             activity = this@MainActivity,
             name = ExamplePlugin.channel,
             method = "getText",
             bundle = bundle
-        ).toString()
+        )
 
         binding.buttonToast.setOnClickListener {
-            PluginExecutor.execMethodCall(
+            PluginExecutor.execMethodCall<Any>(
                 activity = this@MainActivity,
                 name = ToastPlugin.channel,
                 method = "toast",
@@ -42,23 +42,23 @@ class MainActivity : AppCompatActivity() {
         binding.buttonClient.setOnClickListener {
             Toast.makeText(
                 this,
-                (PluginExecutor.execMethodCall(
+                (PluginExecutor.execMethodCall<EcosedClient>(
                     activity = this@MainActivity,
                     name = LEDemo.channel,
                     method = "client",
                     bundle = null
-                ) as EcosedClient).javaClass.name,
+                ))!!.javaClass.name,
                 Toast.LENGTH_SHORT
             ).show()
         }
 
         binding.logo.setImageDrawable(
-            PluginExecutor.execMethodCall(
+            PluginExecutor.execMethodCall<Drawable>(
                 activity = this@MainActivity,
                 name = LEDemo.channel,
                 method = "logo",
                 bundle = null
-            ) as Drawable
+            )
         )
     }
 }

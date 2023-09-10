@@ -22,7 +22,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
  * 描述: 客户端组件
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
+abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver, EcosedPlugin,
+    PluginChannel.MethodCallHandler {
 
     /** 宿主FragmentActivity. */
     private lateinit var mActivity: FragmentActivity
@@ -42,12 +43,35 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
     /** 宿主FragmentActivity的WindowManager. */
     private lateinit var mWindowManager: WindowManager
 
+    /** 插件通道 */
+    private lateinit var mPluginChannel: PluginChannel
+
     /**
      * 附加基本上下文.
      */
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
     }
+
+    /**
+     * 插件被添加时执行.
+     */
+    override fun onEcosedAdded(binding: PluginBinding) {
+        mPluginChannel = PluginChannel(binding = binding, channel = channel)
+        mPluginChannel.setMethodCallHandler(handler = this@EcosedClient)
+    }
+
+    /** 获取插件通信通道. */
+    override val getPluginChannel: PluginChannel
+        get() = mPluginChannel
+
+    /**
+     * 处理指定方法调用.
+     */
+    override fun onEcosedMethodCall(
+        call: PluginChannel.MethodCall,
+        result: PluginChannel.Result
+    ) = Unit
 
     /**
      * 获取是否调试模式.
@@ -78,14 +102,6 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
     abstract fun getPluginList(): ArrayList<EcosedPlugin>?
 
     /**
-     * 获取框架扩展.
-     * @return EcosedExtension?.
-     */
-    open fun getExtension(): EcosedExtension? {
-        return null
-    }
-
-    /**
      * 创建UI界面 - LibEcosed框架专用接口.
      * @param inflater LayoutInflater.
      * @param container ViewGroup.
@@ -111,7 +127,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取Application全局类 - LibEcosed框架专用接口.
      * @return Application.
      */
-    open fun getApplication(): Application {
+    protected fun getApplication(): Application {
         return mApplication
     }
 
@@ -119,7 +135,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取宿主FragmentActivity的Window - LibEcosed框架专用接口.
      * @return 宿主FragmentActivity的Window.
      */
-    open fun getWindow(): Window {
+    protected fun getWindow(): Window {
         return mWindow
     }
 
@@ -127,7 +143,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取宿主FragmentActivity的WindowManager - LibEcosed框架专用接口.
      * @return 宿主FragmentActivity的WindowManager.
      */
-    open fun getWindowManager(): WindowManager {
+    protected fun getWindowManager(): WindowManager {
         return mWindowManager
     }
 
@@ -135,7 +151,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取宿主Fragment - LibEcosed框架专用接口.
      * @return 宿主Fragment.
      */
-    open fun getFragment(): Fragment {
+    protected fun getFragment(): Fragment {
         return mFragment
     }
 
@@ -143,7 +159,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取宿主Fragment的childFragmentManager - LibEcosed框架专用接口.
      * @return 宿主Fragment的childFragmentManager.
      */
-    open fun getFragmentManager(): FragmentManager {
+    protected fun getFragmentManager(): FragmentManager {
         return mFragmentManager
     }
 
@@ -151,8 +167,35 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * 获取宿主FragmentActivity - LibEcosed框架专用接口.
      * @return 宿主FragmentActivity.
      */
-    open fun getActivity(): FragmentActivity {
+    protected fun getActivity(): FragmentActivity {
         return mActivity
+    }
+
+    /**
+     * 调用插件代码的方法.
+     * @param name 要调用的插件的通道.
+     * @param method 要调用的插件中的方法.
+     * @param bundle 通过Bundle传递参数.
+     * @return 返回方法执行后的返回值.
+     */
+    protected fun <T> execMethodCall(
+        name: String,
+        method: String,
+        bundle: Bundle?
+    ): T? {
+        if (getApplication() is EcosedApplication) {
+            (getApplication() as EcosedApplication).apply {
+                return getPluginEngine().execMethodCall<T>(
+                    name = name,
+                    method = method,
+                    bundle = bundle
+                )
+            }
+        } else error(
+            message = "错误:EcosedApplication接口未实现.\n" +
+                    "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" +
+                    "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."
+        )
     }
 
     /**
@@ -174,7 +217,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
      * @param window 在宿主Fragment中传入requireActivity().window.
      * @param windowManager 在宿主Fragment中传入requireActivity().windowManager.
      */
-    open fun secondAttach(
+    fun secondAttach(
         activity: FragmentActivity,
         application: Application,
         fragment: Fragment,
@@ -188,5 +231,9 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver {
         mFragmentManager = fragmentManager
         mWindow = window
         mWindowManager = windowManager
+    }
+
+    companion object {
+        const val channel: String = ""
     }
 }

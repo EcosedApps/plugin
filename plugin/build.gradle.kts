@@ -35,7 +35,7 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation(dependencyNotation = "androidx.annotation:annotation:1.6.0")
+    implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-common:2.6.1")
+    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-common:2.6.2")
 }

@@ -50,30 +50,24 @@ class PluginEngine {
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
-                // 加载框架扩展 (如果使用了的话).
-                mClient.getExtension()?.let { extension ->
-                    mBinding?.let { binding ->
-                        extension.apply {
-                            try {
-                                attache(base = mBase)
-                                if (mClient.isDebug()) {
-                                    Log.d(tag, "框架扩展已附加基本上下文")
-                                }
-                                onEcosedAdded(binding = binding)
-                                if (mClient.isDebug()) {
-                                    Log.d(tag, "框架扩展已加载")
-                                }
-                            } catch (e: Exception) {
-                                if (mClient.isDebug()) {
-                                    Log.e(tag, "框架扩展加载失败!", e)
-                                }
+                // 加载客户端组件
+                mBinding?.let { binding ->
+                    mClient.apply {
+                        try {
+                            onEcosedAdded(binding = binding)
+                            if (mClient.isDebug()) {
+                                Log.d(tag, "客户端组件已加载")
+                            }
+                        } catch (e: Exception) {
+                            if (mClient.isDebug()) {
+                                Log.e(tag, "客户端组件加载失败!", e)
                             }
                         }
-                    }.run {
-                        mPluginList?.add(element = extension)
-                        if (mClient.isDebug()) {
-                            Log.d(tag, "框架扩展已添加到插件列表")
-                        }
+                    }
+                }.run {
+                    mPluginList?.add(element = mClient)
+                    if (mClient.isDebug()) {
+                        Log.d(tag, "客户端组件已添加到插件列表")
                     }
                 }
                 // 加载LibEcosed框架 (如果使用了的话).
@@ -154,7 +148,7 @@ class PluginEngine {
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值,类型为Any?.
      */
-    internal fun <T: Any?> execMethodCall(
+    internal fun <T> execMethodCall(
         name: String,
         method: String,
         bundle: Bundle?

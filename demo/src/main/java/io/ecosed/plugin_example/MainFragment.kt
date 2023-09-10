@@ -14,12 +14,12 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mClient = PluginExecutor.execMethodCall(
+        mClient = PluginExecutor.execMethodCall<EcosedClient>(
             fragment = this@MainFragment,
             name = LEDemo.channel,
             method = "client",
             bundle = null
-        ) as EcosedClient
+        )!!
         mClient.secondAttach(
             activity = requireActivity(),
             application = requireActivity().application,

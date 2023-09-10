@@ -26,7 +26,7 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
         fun <T> execMethodCall(
             activity: Activity,
@@ -41,14 +41,14 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        fun execMethodCall(
+        fun <T> execMethodCall(
             fragment: Fragment,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any?
+        ): T?
 
         /**
          * 调用插件代码的方法.
@@ -56,14 +56,14 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        fun execMethodCall(
+        fun <T> execMethodCall(
             service: Service,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any?
+        ): T?
 
         /**
          * 调用插件代码的方法.
@@ -71,29 +71,14 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        fun execMethodCall(
+        fun <T> execMethodCall(
             application: Application,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any?
-
-        /**
-         * 调用插件代码的方法.
-         * @param client 传入EcosedClient.
-         * @param name 要调用的插件的通道.
-         * @param method 要调用的插件中的方法.
-         * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
-         */
-        fun execMethodCall(
-            client: EcosedClient,
-            name: String,
-            method: String,
-            bundle: Bundle?
-        ): Any?
+        ): T?
     }
 
     companion object : Executor {
@@ -109,15 +94,15 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        override fun <T: Any?> execMethodCall(
+        override fun <T> execMethodCall(
             activity: Activity,
             name: String,
             method: String,
             bundle: Bundle?
         ): T? {
-            if (activity.application is EcosedApplication){
+            if (activity.application is EcosedApplication) {
                 (activity.application as EcosedApplication).apply {
                     return getPluginEngine().execMethodCall<T>(
                         name = name,
@@ -136,27 +121,23 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        override fun execMethodCall(
+        override fun <T> execMethodCall(
             fragment: Fragment,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any? = when (fragment.requireActivity().application) {
-            is EcosedApplication -> {
+        ): T? {
+            if (fragment.requireActivity().application is EcosedApplication) {
                 (fragment.requireActivity().application as EcosedApplication).apply {
-                    getPluginEngine().apply {
-                        return execMethodCall(
-                            name = name,
-                            method = method,
-                            bundle = bundle
-                        )
-                    }
+                    return getPluginEngine().execMethodCall<T>(
+                        name = name,
+                        method = method,
+                        bundle = bundle
+                    )
                 }
-            }
-
-            else -> error(
+            } else error(
                 message = errorMessage
             )
         }
@@ -167,27 +148,23 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        override fun execMethodCall(
+        override fun <T> execMethodCall(
             service: Service,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any? = when (service.application) {
-            is EcosedApplication -> {
+        ): T? {
+            if (service.application is EcosedApplication) {
                 (service.application as EcosedApplication).apply {
-                    getPluginEngine().apply {
-                        return execMethodCall(
-                            name = name,
-                            method = method,
-                            bundle = bundle
-                        )
-                    }
+                    return getPluginEngine().execMethodCall<T>(
+                        name = name,
+                        method = method,
+                        bundle = bundle
+                    )
                 }
-            }
-
-            else -> error(
+            } else error(
                 message = errorMessage
             )
         }
@@ -198,58 +175,23 @@ class PluginExecutor {
          * @param name 要调用的插件的通道.
          * @param method 要调用的插件中的方法.
          * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
+         * @return 返回方法执行后的返回值.
          */
-        override fun execMethodCall(
+        override fun <T> execMethodCall(
             application: Application,
             name: String,
             method: String,
             bundle: Bundle?
-        ): Any? = when (application) {
-            is EcosedApplication -> {
+        ): T? {
+            if (application is EcosedApplication) {
                 (application as EcosedApplication).apply {
-                    getPluginEngine().apply {
-                        return execMethodCall(
-                            name = name,
-                            method = method,
-                            bundle = bundle
-                        )
-                    }
+                    return getPluginEngine().execMethodCall<T>(
+                        name = name,
+                        method = method,
+                        bundle = bundle
+                    )
                 }
-            }
-
-            else -> error(
-                message = errorMessage
-            )
-        }
-
-        /**
-         * 调用插件代码的方法.
-         * @param client 传入EcosedClient.
-         * @param name 要调用的插件的通道.
-         * @param method 要调用的插件中的方法.
-         * @param bundle 通过Bundle传递参数.
-         * @return 返回方法执行后的返回值,类型为Any?.
-         */
-        override fun execMethodCall(
-            client: EcosedClient,
-            name: String,
-            method: String,
-            bundle: Bundle?
-        ): Any? = when (client.getApplication()) {
-            is EcosedApplication -> {
-                (client.getApplication() as EcosedApplication).apply {
-                    getPluginEngine().apply {
-                        return execMethodCall(
-                            name = name,
-                            method = method,
-                            bundle = bundle
-                        )
-                    }
-                }
-            }
-
-            else -> error(
+            } else error(
                 message = errorMessage
             )
         }
